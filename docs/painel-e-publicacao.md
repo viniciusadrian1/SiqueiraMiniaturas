@@ -12,13 +12,14 @@
 
 ## Situação atual
 
-O painel online **ainda não está conectado**. O repositório é `viniciusadrian1/SiqueiraMiniaturas`. O usuário o tornou público e autorizou usar o `gh` da máquina; a conta pessoal foi confirmada com acesso de administrador. O projeto usa a branch `main`. Ainda falta definir a hospedagem/domínio, instalar o GitHub App do painel e configurar suas credenciais. O botão de demonstração usa apenas a memória do navegador: não publica nem grava arquivos. As fotos atuais continuam ilustrativas.
+Site publicado em https://siqueiraminiaturas.vercel.app, com branch `main` do repositório pessoal `viniciusadrian1/SiqueiraMiniaturas`. Os produtos demonstrativos foram removidos; as três categorias iniciais foram mantidas. O painel verifica `/api/admin-status` e libera o login quando as variáveis necessárias estão configuradas. A demonstração fica disponível somente em localhost.
 
+A conexão do GitHub App está em configuração. O assistente `node scripts/setup-github-app.mjs` prepara o registro na conta pessoal e recebe as credenciais em `.env.github-app.json`, ignorado pelo Git. Instalar apenas em SiqueiraMiniaturas. Não compartilhar nem publicar esse arquivo.
 ## Conectar para produção
 
 1. Usar o repositório `viniciusadrian1/SiqueiraMiniaturas`, atualmente público por escolha do proprietário. O login também suporta repositório privado. Instalar um GitHub App próprio apenas nesse repositório, usando “Only select repositories”. Permissões de repositório: **Contents: Read and write** e **Metadata: Read-only**. Nenhuma permissão de conta ou de organização. Não instalar nos projetos das empresas. A autorização usa permissões da instalação, sem os escopos amplos `repo` ou `public_repo`.
 2. Subir os arquivos do projeto, sem `node_modules`, `.env`, `dist` ou backups desnecessários. O `.gitignore` já exclui segredos e arquivos gerados.
-3. Confirmar `repo` e `branch` em `admin/settings.js`. Alterar `enabled` para `true` somente depois de configurar o login e a hospedagem.
+3. Confirmar `repo` e `branch` em `admin/settings.js`. O painel detecta a configuração do servidor automaticamente.
 4. Na hospedagem, configurar `npm run build` e pasta de saída `dist`. A Vercel tem `vercel.json` preparado e executa os endpoints em `api/`.
 5. Registrar um GitHub App na conta pessoal (não uma OAuth App) com homepage igual à URL definitiva do site e callback `https://SEU-DOMINIO/api/callback`. Configurar as variáveis de ambiente diretamente na hospedagem, nunca no chat nem no frontend:
    - `SITE_ORIGIN`: origem HTTPS exata, sem barra final.
@@ -27,11 +28,11 @@ O painel online **ainda não está conectado**. O repositório é `viniciusadria
    - `GITHUB_CLIENT_ID` e `GITHUB_CLIENT_SECRET`: do GitHub App. Não é necessário gerar uma chave privada para este fluxo de login de usuário.
 6. Manter a expiração dos tokens ativada. Este painel não faz renovação silenciosa: ao expirar, sair e entrar novamente pelo GitHub. Fazer novo deploy. Entrar em `/admin/`, autorizar o GitHub e testar uma peça inicialmente oculta. Publicar uma peça e conferir o novo deploy antes de divulgar.
 
-A Vercel Hobby restringe uso a projetos pessoais não comerciais. Este mostruário tem finalidade comercial; usar um plano adequado ou outra hospedagem compatível. A estrutura está preparada para Vercel, mas não foi contratado plano nem criada publicação. Em outra hospedagem, o site estático é portátil; os dois endpoints OAuth precisam de adaptação para o runtime escolhido.
+A Vercel Hobby restringe uso a projetos pessoais não comerciais. Este mostruário tem finalidade comercial; usar um plano adequado ou outra hospedagem compatível. A estrutura está preparada para Vercel, e já está publicado; nenhum plano foi contratado por esta configuração. Em outra hospedagem, o site estático é portátil; os dois endpoints OAuth precisam de adaptação para o runtime escolhido.
 
 ## Uso diário
 
-Entrar em **Catálogo → Produtos e categorias**. Adicionar a categoria antes de escolher a categoria de uma nova peça. Enviar JPG, PNG ou WebP até 5 MB, preferencialmente em torno de 1600 px. Para foto real, limpar o campo de recorte demonstrativo. Usar um código único por peça e categoria. O preço é texto opcional; deixar vazio mantém consulta pelo WhatsApp.
+Entrar em **Catálogo → Produtos e categorias**. Adicionar a categoria antes de escolher a categoria de uma nova peça. Enviar JPG, PNG ou WebP até 5 MB, preferencialmente em torno de 1600 px. Usar um código único por peça e categoria. O preço é texto opcional; deixar vazio mantém consulta pelo WhatsApp.
 
 Ativar **Mostrar no site** e publicar. A alteração gera um commit no GitHub e dispara o build da hospedagem; só aparece no site após esse build terminar. Para tirar uma peça da vitrine, desativar sua visibilidade. Antes de remover uma categoria, reassociar os produtos; o build bloqueia referências inválidas para preservar a última publicação válida.
 

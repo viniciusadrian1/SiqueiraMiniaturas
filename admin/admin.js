@@ -5,7 +5,7 @@ const fields = [
   string('id','Identificador',{hint:'Sem espaços ou acentos. Exemplo: capacetes. Não altere após associar produtos.',pattern:['^[a-z0-9-]+$','Use letras minúsculas, números e hífens.']}),
   string('name','Nome da categoria'),{name:'visible',label:'Mostrar no site',widget:'boolean',default:true,hint:'Ao ocultar uma categoria, suas peças também ficam ocultas.'}
  ]},
- {name:'products',label:'Produtos',widget:'list',summary:'{{fields.name}}',fields:[
+ {name:'products',label:'Produtos',widget:'list',required:false,summary:'{{fields.name}}',fields:[
   string('id','Código da peça',{hint:'Único, sem espaços. Exemplo: ferrari-2024-01',pattern:['^[a-z0-9-]+$','Use letras minúsculas, números e hífens.']}),
   string('name','Nome da peça'),
   {name:'category',label:'Categoria',widget:'relation',collection:'catalog',file:'items',search_fields:['categories.*.name'],display_fields:['categories.*.name'],value_field:'categories.*.id'},
@@ -16,8 +16,7 @@ const fields = [
   string('tag','Selo da peça',{required:false,hint:'Exemplo: Novidade'}),
   string('label','Tipo exibido',{required:false,hint:'Exemplo: MINIATURA'}),
   {name:'published',label:'Mostrar no site',widget:'boolean',default:false},
-  {name:'illustrative',label:'Imagem ilustrativa',widget:'boolean',default:false},
-  string('imagePosition','Recorte das imagens de demonstração',{required:false,hint:'Deixe vazio ao enviar uma foto real.'})
+  {name:'illustrative',label:'Imagem ilustrativa',widget:'boolean',default:false}
  ]}
 ];
 async function start(demo=false) {
@@ -35,8 +34,12 @@ async function start(demo=false) {
  }
 }
 document.querySelector('#open-demo').addEventListener('click',()=>start(true));
-if (adminSettings.enabled && /^[\w.-]+\/[\w.-]+$/.test(adminSettings.repo)) start();
-else {
- document.querySelector('#status').textContent='Repositório escolhido: viniciusadrian1/SiqueiraMiniaturas. Falta confirmar o acesso e configurar o login do GitHub para salvar e publicar alterações.';
- document.querySelector('#open-demo').hidden=false;
+async function initialize(){
+ let ready=false;
+ try {const response=await fetch('/api/admin-status',{cache:'no-store'});if(response.ok)ready=(await response.json()).configured===true;}
+ catch { /* Keep the setup notice if the status endpoint is unavailable. */ }
+ if(ready && /^[\w.-]+\/[\w.-]+$/.test(adminSettings.repo)){await start();return;}
+ document.querySelector('#status').textContent='O acesso administrativo está sendo configurado. Assim que a conexão com o GitHub estiver pronta, você poderá entrar aqui para cadastrar suas peças e enviar fotos.';
+ document.querySelector('#open-demo').hidden=!['localhost','127.0.0.1'].includes(location.hostname);
 }
+initialize();

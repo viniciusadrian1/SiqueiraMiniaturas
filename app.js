@@ -37,6 +37,11 @@ function render() {
   grid.innerHTML = shown.map(p => `<article class="product-card"><button class="product-art" data-product="${esc(p.id)}" aria-label="Ver detalhes de ${esc(p.name)}">${art(p)}${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<span class="product-open" aria-hidden="true">Ver detalhes</span><span class="product-swatch" style="--swatch:#ec3b30" aria-hidden="true"></span></button><div class="product-label"><span>${esc(p.label)}</span><span>Nº ${String(products.indexOf(p) + 1).padStart(2, '0')}</span></div><button class="product-name" data-product="${esc(p.id)}">${esc(p.name)}</button><p>${esc(p.subtitle)}</p>${p.price ? `<p class="product-price">${esc(p.price)}</p>` : ''}<div class="product-foot"><a href="${whatsappURL(`Olá! Vi ${p.name} no site da Siqueira Miniaturas. Vocês têm alguma peça nesse estilo? Gostaria de ver fotos reais, valores e disponibilidade.`)}" target="_blank" rel="noopener noreferrer" aria-label="Consultar ${esc(p.name)} pelo WhatsApp">Consultar pelo WhatsApp</a></div></article>`).join('');
   document.querySelector('#results-count').textContent = `${String(shown.length).padStart(2, '0')} de ${String(matches.length).padStart(2, '0')} peças`;
   document.querySelector('#empty').hidden = matches.length > 0;
+  document.querySelector('#empty h3').textContent = products.length ? 'Nenhuma peça por aqui.' : 'A próxima peça da sua coleção está chegando.';
+  document.querySelector('#empty p').textContent = products.length ? 'Tente outro termo ou explore todas as categorias.' : 'Estamos preparando o catálogo. Enquanto isso, consulte as peças pelo WhatsApp.';
+  document.querySelector('#reset-search').hidden = !products.length;
+  document.querySelector('.catalog-toolbar').hidden = !products.length;
+  document.querySelector('.catalog-meta').hidden = !products.length;
   more.hidden = matches.length <= 4;
   more.textContent = expanded ? 'Mostrar menos' : 'Ver mais peças';
 }
