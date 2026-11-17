@@ -110,3 +110,4 @@
 }
 @media(max-width:360px){.hero-frame{min-height:630px}.hero-title-left h1{font-size:43px}.hero-detail-copy h2{font-size:37px}.hero-intro-note{top:calc(6% + 96px)}.hero-bottom-left{left:20px;right:20px}.hero-bottom-left .button{padding-inline:14px}}
 @media(max-height:600px) and (max-width:950px) and (orientation:landscape){.hero-frame{height:680px;max-height:none}.race-media{inset:0}}
+@media(prefers-reduced-motion:reduce){.scroll-scene{height:auto;min-height:0}.hero-frame{position:relative}}

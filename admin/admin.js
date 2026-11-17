@@ -7,7 +7,7 @@ const localPhotos=new Map();
 const price=value=>value?(String(value).startsWith('R$')?value:`R$ ${value}`):'Preço sob consulta';
 function notice(message,error=false){$('#notice').hidden=false;$('#notice').textContent=message;$('#notice').classList.toggle('error',error);}
 function image(path){return localPhotos.get(path)||('/'+imageURL(path).replace(/^\//,''));}
-function showWorkspace(){ $('#login').hidden=true;$('#workspace').hidden=false;$('#preview-notice').hidden=!preview;render(); }
+function showWorkspace(){ $('#login').hidden=true;$('#workspace').hidden=false;$('#preview-notice').hidden=!preview;list(); }
 function render(){
  const products=view==='products',query=$('#search').value.toLocaleLowerCase('pt-BR'),filter=$('#visibility').value;
  $('#nav-count').textContent=data.products.length;
