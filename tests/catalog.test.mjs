@@ -12,3 +12,8 @@ test('CMS text is escaped and photo paths cannot inject HTML or CSS',()=>{
  assert.equal(imageURL('javascript:alert(1)'),'assets/brand/favicon.svg');
  assert.equal(imageURL('/assets/uploads/photo.webp'),'/assets/uploads/photo.webp');
 });
+
+test('trash contents never appear in the public catalog',()=>{
+ const result=publicCatalog({categories:[],products:[],trash:[{id:'deleted',item:{name:'Removed piece'}}]});
+ assert.deepEqual(result,{categories:[],products:[]});
+});

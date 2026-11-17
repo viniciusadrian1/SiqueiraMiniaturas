@@ -60,3 +60,9 @@ Em Categorias, arrastar pela alça para escolher a sequência dos filtros. A ord
 ### Excluir produtos e categorias
 
 O botão “Excluir” abre uma confirmação com o nome do item e a ação “Cancelar” focada inicialmente. Somente “Sim, excluir” grava a remoção. Categorias com produtos vinculados, inclusive ocultos, ficam bloqueadas até os produtos serem movidos ou excluídos. A gravação mantém a proteção contra alterações simultâneas; se falhar, o item permanece e a confirmação mostra o erro. A exclusão retira o cadastro e a página gerada na próxima publicação; arquivos de fotos e histórico Git permanecem preservados.
+
+### Lixeira e recuperação
+
+As novas exclusões enviam os cadastros para `trash` no catálogo, guardando nome, campos completos, fotos, posição e data da exclusão. “Lixeira” no menu permite buscar e restaurar. A recuperação preserva o código, a visibilidade anterior e a posição, dentro do limite da lista atual. Se a categoria original também estiver na lixeira, restaurar o produto recupera essa categoria junto. Conflitos de código bloqueiam a operação sem perder o item. Categorias com produtos ativos continuam protegidas contra exclusão.
+
+O catálogo público e as páginas não incluem o conteúdo da lixeira. O repositório continua público por escolha do proprietário. Os itens não expiram automaticamente. Não há exclusão permanente no painel. Exclusões realizadas antes da introdução da lixeira não entram automaticamente nela e continuam disponíveis apenas no histórico Git.

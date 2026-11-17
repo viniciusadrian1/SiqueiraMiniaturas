@@ -1,7 +1,7 @@
 import {photoSort} from './photo-sort.js';
 import {productImages} from '../product-data.js';
 import {validateAvailability,availabilityInfo} from '../product-data.js';
-import {CatalogStore,newId,removeCatalogItem} from './store.js';
+import {CatalogStore,newId,removeCatalogItem,restoreCatalogItem} from './store.js';
 import {escapeHTML as esc,imageURL,publicCatalog} from '../catalog-data.js';
 const $=selector=>document.querySelector(selector),form=$('#product-form');
 const preview=['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
@@ -12,6 +12,17 @@ function notice(message,error=false){$('#notice').hidden=false;$('#notice').text
 function image(path){return localPhotos.get(path)||('/'+imageURL(path).replace(/^\//,''));}
 function showWorkspace(){ $('#login').hidden=true;$('#workspace').hidden=false;$('#preview-notice').hidden=!preview;list(); }
 function render(){
+ $('#nav-count').textContent=data.products.length;
+ if(view==='trash'){
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view));
+  $('#page-title').innerHTML='Sua lixeira<span>.</span>';$('#page-description').textContent='Recupere produtos e categorias enviados para cá.';
+  $('#add-item').hidden=true;$('#visibility').hidden=true;$('#search').placeholder='Buscar na lixeira…';
+  $('#product-order-hint').hidden=false;$('#product-order-hint').textContent='Restaurar devolve o cadastro, as fotos e a posição original. Se necessário, a categoria da peça também será recuperada.';
+  const query=$('#search').value.toLocaleLowerCase('pt-BR');
+  $('#items').innerHTML=(data.trash||[]).filter(e=>e.item.name.toLocaleLowerCase('pt-BR').includes(query)).map(e=>`<article class="category-card trash-card"><div class="category-info"><span class="trash-kind">${e.kind==='products'?'Produto':'Categoria'}</span><h2>${esc(e.item.name)}</h2><p>Enviado à lixeira em ${esc(new Date(e.deletedAt).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'}))}</p></div><button class="secondary" data-restore="${esc(e.id)}">Restaurar</button></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Os próximos itens excluídos aparecerão nesta lixeira.</p></div>';
+  return;
+ }
+ $('#add-item').hidden=false;
  const products=view==='products',query=$('#search').value.toLocaleLowerCase('pt-BR'),filter=$('#visibility').value;
  $('#nav-count').textContent=data.products.length;
  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view));
@@ -158,15 +169,17 @@ $('#category-form').addEventListener('submit',async event=>{
 });
 $('#items').addEventListener('click',async event=>{
  const edit=event.target.closest('[data-edit]'),toggle=event.target.closest('[data-toggle]');
- if(busy)return;const deletion=event.target.closest('[data-delete]');if(deletion){openDelete(view,deletion.dataset.delete);return;}if(edit){view==='products'?openProduct(edit.dataset.edit):openCategory(edit.dataset.edit);return;}
+ if(busy)return;const restore=event.target.closest('[data-restore]');if(restore){
+  saving(true);try{const next=restoreCatalogItem(data,restore.dataset.restore);await persist(next);render();monitorPublication();}catch(error){notice(error.message,true);}finally{saving(false);}return;
+ }const deletion=event.target.closest('[data-delete]');if(deletion){openDelete(view,deletion.dataset.delete);return;}if(edit){view==='products'?openProduct(edit.dataset.edit):openCategory(edit.dataset.edit);return;}
  if(toggle){const next=structuredClone(data),p=next.products.find(p=>p.id===toggle.dataset.toggle);p.published=p.published===false;saving(true);try{await persist(next);render();monitorPublication();}catch(error){notice(error.message,true);}finally{saving(false);}}
 });
 function openDelete(kind,id){
  const item=data[kind].find(item=>item.id===id);if(!item)return;
- pendingDelete={kind,id};$('#delete-title').textContent=kind==='products'?'Excluir produto?':'Excluir categoria?';
+ pendingDelete={kind,id};$('#delete-title').textContent=kind==='products'?'Enviar produto para a lixeira?':'Enviar categoria para a lixeira?';
  $('#delete-name').textContent=item.name;$('#delete-error').textContent='';
  const blocked=kind==='categories'&&data.products.some(p=>p.category===id);
- $('#delete-description').textContent=blocked?'Esta categoria possui produtos, inclusive peças ocultas. Mova esses produtos para outra categoria ou exclua as peças primeiro.':kind==='products'?'Este produto será removido do catálogo e sua página sairá do site após a atualização.':'Esta categoria será removida do painel e dos filtros do site após a atualização.';
+ $('#delete-description').textContent=blocked?'Esta categoria possui produtos, inclusive peças ocultas. Mova esses produtos para outra categoria ou exclua as peças primeiro.':kind==='products'?'O produto sairá do site após a atualização. Você poderá recuperá-lo na Lixeira, com suas fotos e detalhes.':'A categoria sairá dos filtros após a atualização. Você poderá recuperá-la na Lixeira.';
  $('#confirm-delete').hidden=blocked;$('#delete-dialog').showModal();
 }
 $('#cancel-delete').onclick=()=>$('#delete-dialog').close();
@@ -176,10 +189,10 @@ $('#confirm-delete').onclick=async()=>{
  if(busy||!pendingDelete)return;
  const {kind,id}=pendingDelete;let next;
  try{next=removeCatalogItem(data,kind,id);}catch(error){$('#delete-error').textContent=error.message;return;}
- saving(true);$('#confirm-delete').textContent='Excluindo…';
+ saving(true);$('#confirm-delete').textContent='Enviando…';
  try{await persist(next);$('#delete-dialog').close();render();monitorPublication();}
  catch(error){$('#delete-error').textContent=error.message;}
- finally{saving(false);$('#confirm-delete').textContent='Sim, excluir';}
+ finally{saving(false);$('#confirm-delete').textContent='Enviar para a lixeira';}
 };
 $('#add-item').onclick=()=>view==='products'?openProduct():openCategory();
 $('#close-category').onclick=()=>$('#category-dialog').close();

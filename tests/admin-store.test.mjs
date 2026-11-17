@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CatalogStore,validateCatalog,removeCatalogItem} from '../admin/store.js';
+import {CatalogStore,validateCatalog,removeCatalogItem,restoreCatalogItem} from '../admin/store.js';
 const data={categories:[{id:'miniaturas',name:'Miniaturas'}],products:[{id:'real',name:'Peça real',category:'miniaturas',image:'/assets/uploads/real.jpg'}]};
 const encoded=Buffer.from(JSON.stringify(data)).toString('base64');
 test('default request preserves the browser fetch receiver',async()=>{
@@ -65,4 +65,19 @@ test('deletion removes only the selected item without mutating the current catal
 test('linked categories are protected even when their products are hidden',()=>{
  assert.throws(()=>removeCatalogItem({...data,products:[{...data.products[0],published:false}]},'categories','miniaturas'),/vinculados/);
  assert.throws(()=>removeCatalogItem(data,'products','missing'),/não está mais/);
+});
+
+test('trash restores complete product data and its original order',()=>{
+ const original={...data,products:[{...data.products[0],images:['/assets/uploads/real.jpg','/assets/uploads/back.jpg'],published:false},{...data.products[0],id:'second'}]};
+ const trashed=removeCatalogItem(original,'products','real');
+ assert.equal(trashed.trash.length,1);assert.equal(trashed.products[0].id,'second');
+ const restored=restoreCatalogItem(trashed,trashed.trash[0].id);
+ assert.deepEqual(restored.products,original.products);assert.equal(restored.trash.length,0);
+});
+test('restoring a product recovers its original category from trash when necessary',()=>{
+ let trashed=removeCatalogItem(data,'products','real');const id=trashed.trash[0].id;
+ trashed=removeCatalogItem(trashed,'categories','miniaturas');
+ const restored=restoreCatalogItem(trashed,id);
+ assert.deepEqual(restored.products,data.products);assert.deepEqual(restored.categories,data.categories);assert.equal(restored.trash.length,0);
+ assert.throws(()=>restoreCatalogItem({...trashed,categories:data.categories,products:data.products},id),/Já existe/);
 });

@@ -46,5 +46,22 @@ export function removeCatalogItem(data,kind,id){
  if(!['products','categories'].includes(kind))throw new Error('Tipo de item inválido.');
  if(!data[kind].some(item=>item.id===id))throw new Error('Esse item não está mais no catálogo. Atualize a lista.');
  if(kind==='categories'&&data.products.some(p=>p.category===id))throw new Error('Esta categoria tem produtos vinculados. Mova os produtos para outra categoria ou exclua essas peças antes de apagar a categoria.');
- const next=structuredClone(data);next[kind]=next[kind].filter(item=>item.id!==id);return next;
+ const next=structuredClone(data),index=next[kind].findIndex(item=>item.id===id),[item]=next[kind].splice(index,1);
+ next.trash??=[];next.trash.unshift({id:crypto.randomUUID(),kind,item,index,deletedAt:new Date().toISOString()});return next;
+}
+
+export function restoreCatalogItem(data,trashId){
+ const next=structuredClone(data),entry=next.trash?.find(item=>item.id===trashId);
+ if(!entry||!['products','categories'].includes(entry.kind))throw new Error('Esse item não está mais na lixeira. Atualize a lista.');
+ function restore(entry){
+  if(next[entry.kind].some(item=>item.id===entry.item.id))throw new Error('Já existe um cadastro com este código. Atualize a lista antes de restaurar.');
+  next[entry.kind].splice(Math.min(entry.index??0,next[entry.kind].length),0,entry.item);
+  next.trash=next.trash.filter(item=>item.id!==entry.id);
+ }
+ if(entry.kind==='products'&&!next.categories.some(c=>c.id===entry.item.category)){
+  const category=next.trash.find(e=>e.kind==='categories'&&e.item.id===entry.item.category);
+  if(!category)throw new Error('A categoria original não foi encontrada. Restaure a categoria antes de recuperar esta peça.');
+  restore(category);
+ }
+ restore(entry);validateCatalog(next);return next;
 }
