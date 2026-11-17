@@ -65,3 +65,12 @@ export function restoreCatalogItem(data,trashId){
  }
  restore(entry);validateCatalog(next);return next;
 }
+
+export function purgeTrash(data,id){
+ const next=structuredClone(data),trash=next.trash||[];
+ if(id===null){next.trash=[];return next;}
+ const entry=trash.find(e=>e.id===id);
+ if(!entry)throw new Error('Esse item não está mais na lixeira. Atualize a lista.');
+ if(entry.kind==='categories'&&!next.categories.some(c=>c.id===entry.item.id)&&trash.some(e=>e.kind==='products'&&e.item.category===entry.item.id))throw new Error('Há produtos na lixeira que precisam desta categoria para serem restaurados. Restaure a categoria ou exclua definitivamente esses produtos primeiro.');
+ next.trash=trash.filter(e=>e.id!==id);return next;
+}

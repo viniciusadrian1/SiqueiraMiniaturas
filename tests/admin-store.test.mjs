@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CatalogStore,validateCatalog,removeCatalogItem,restoreCatalogItem} from '../admin/store.js';
+import {CatalogStore,validateCatalog,removeCatalogItem,restoreCatalogItem,purgeTrash} from '../admin/store.js';
 const data={categories:[{id:'miniaturas',name:'Miniaturas'}],products:[{id:'real',name:'Peça real',category:'miniaturas',image:'/assets/uploads/real.jpg'}]};
 const encoded=Buffer.from(JSON.stringify(data)).toString('base64');
 test('default request preserves the browser fetch receiver',async()=>{
@@ -80,4 +80,22 @@ test('restoring a product recovers its original category from trash when necessa
  const restored=restoreCatalogItem(trashed,id);
  assert.deepEqual(restored.products,data.products);assert.deepEqual(restored.categories,data.categories);assert.equal(restored.trash.length,0);
  assert.throws(()=>restoreCatalogItem({...trashed,categories:data.categories,products:data.products},id),/Já existe/);
+});
+
+test('permanent removal only affects the selected trash entry',()=>{
+ let trashed=removeCatalogItem(data,'products','real');const productId=trashed.trash[0].id;
+ trashed=removeCatalogItem(trashed,'categories','miniaturas');
+ const purged=purgeTrash(trashed,productId);
+ assert.equal(purged.trash.length,1);assert.equal(trashed.trash.length,2);
+ assert.throws(()=>restoreCatalogItem(purged,productId),/não está mais/);
+ assert.deepEqual(purged.products,trashed.products);assert.deepEqual(purged.categories,trashed.categories);
+});
+test('category purge protects recoverable products, while emptying removes all trash only',()=>{
+ let trashed=removeCatalogItem(data,'products','real');trashed=removeCatalogItem(trashed,'categories','miniaturas');
+ const category=trashed.trash.find(e=>e.kind==='categories');
+ assert.throws(()=>purgeTrash(trashed,category.id),/precisam desta categoria/);
+ const withActive={...trashed,categories:[{id:'other',name:'Other'}],products:[{...data.products[0],id:'active',category:'other'}]};
+ const emptied=purgeTrash(withActive,null);
+ assert.deepEqual(emptied.trash,[]);assert.deepEqual(emptied.products,withActive.products);assert.deepEqual(emptied.categories,withActive.categories);
+ assert.throws(()=>purgeTrash(withActive,'missing'),/não está mais/);
 });

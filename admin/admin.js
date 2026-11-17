@@ -1,7 +1,7 @@
 import {photoSort} from './photo-sort.js';
 import {productImages} from '../product-data.js';
 import {validateAvailability,availabilityInfo} from '../product-data.js';
-import {CatalogStore,newId,removeCatalogItem,restoreCatalogItem} from './store.js';
+import {CatalogStore,newId,removeCatalogItem,restoreCatalogItem,purgeTrash} from './store.js';
 import {escapeHTML as esc,imageURL,publicCatalog} from '../catalog-data.js';
 const $=selector=>document.querySelector(selector),form=$('#product-form');
 const preview=['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
@@ -12,6 +12,7 @@ function notice(message,error=false){$('#notice').hidden=false;$('#notice').text
 function image(path){return localPhotos.get(path)||('/'+imageURL(path).replace(/^\//,''));}
 function showWorkspace(){ $('#login').hidden=true;$('#workspace').hidden=false;$('#preview-notice').hidden=!preview;list(); }
 function render(){
+ $('#empty-trash').hidden=view!=='trash'||!(data.trash||[]).length;
  $('#nav-count').textContent=data.products.length;
  if(view==='trash'){
   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view));
@@ -19,7 +20,7 @@ function render(){
   $('#add-item').hidden=true;$('#visibility').hidden=true;$('#search').placeholder='Buscar na lixeira…';
   $('#product-order-hint').hidden=false;$('#product-order-hint').textContent='Restaurar devolve o cadastro, as fotos e a posição original. Se necessário, a categoria da peça também será recuperada.';
   const query=$('#search').value.toLocaleLowerCase('pt-BR');
-  $('#items').innerHTML=(data.trash||[]).filter(e=>e.item.name.toLocaleLowerCase('pt-BR').includes(query)).map(e=>`<article class="category-card trash-card"><div class="category-info"><span class="trash-kind">${e.kind==='products'?'Produto':'Categoria'}</span><h2>${esc(e.item.name)}</h2><p>Enviado à lixeira em ${esc(new Date(e.deletedAt).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'}))}</p></div><button class="secondary" data-restore="${esc(e.id)}">Restaurar</button></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Os próximos itens excluídos aparecerão nesta lixeira.</p></div>';
+  $('#items').innerHTML=(data.trash||[]).filter(e=>e.item.name.toLocaleLowerCase('pt-BR').includes(query)).map(e=>`<article class="category-card trash-card"><div class="category-info"><span class="trash-kind">${e.kind==='products'?'Produto':'Categoria'}</span><h2>${esc(e.item.name)}</h2><p>Enviado à lixeira em ${esc(new Date(e.deletedAt).toLocaleDateString('pt-BR',{timeZone:'America/Sao_Paulo'}))}</p></div><div class="trash-actions"><button class="secondary" data-restore="${esc(e.id)}">Restaurar</button><button class="danger-quiet" data-purge="${esc(e.id)}" aria-label="Excluir definitivamente ${esc(e.item.name)}">Excluir definitivamente</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Os próximos itens excluídos aparecerão nesta lixeira.</p></div>';
   return;
  }
  $('#add-item').hidden=false;
@@ -169,30 +170,40 @@ $('#category-form').addEventListener('submit',async event=>{
 });
 $('#items').addEventListener('click',async event=>{
  const edit=event.target.closest('[data-edit]'),toggle=event.target.closest('[data-toggle]');
- if(busy)return;const restore=event.target.closest('[data-restore]');if(restore){
+ if(busy)return;const purge=event.target.closest('[data-purge]');if(purge){openPurge(purge.dataset.purge);return;}const restore=event.target.closest('[data-restore]');if(restore){
   saving(true);try{const next=restoreCatalogItem(data,restore.dataset.restore);await persist(next);render();monitorPublication();}catch(error){notice(error.message,true);}finally{saving(false);}return;
  }const deletion=event.target.closest('[data-delete]');if(deletion){openDelete(view,deletion.dataset.delete);return;}if(edit){view==='products'?openProduct(edit.dataset.edit):openCategory(edit.dataset.edit);return;}
  if(toggle){const next=structuredClone(data),p=next.products.find(p=>p.id===toggle.dataset.toggle);p.published=p.published===false;saving(true);try{await persist(next);render();monitorPublication();}catch(error){notice(error.message,true);}finally{saving(false);}}
 });
 function openDelete(kind,id){
  const item=data[kind].find(item=>item.id===id);if(!item)return;
- pendingDelete={kind,id};$('#delete-title').textContent=kind==='products'?'Enviar produto para a lixeira?':'Enviar categoria para a lixeira?';
+ pendingDelete={kind,id};$('#confirm-delete').textContent='Enviar para a lixeira';$('#delete-title').textContent=kind==='products'?'Enviar produto para a lixeira?':'Enviar categoria para a lixeira?';
  $('#delete-name').textContent=item.name;$('#delete-error').textContent='';
  const blocked=kind==='categories'&&data.products.some(p=>p.category===id);
  $('#delete-description').textContent=blocked?'Esta categoria possui produtos, inclusive peças ocultas. Mova esses produtos para outra categoria ou exclua as peças primeiro.':kind==='products'?'O produto sairá do site após a atualização. Você poderá recuperá-lo na Lixeira, com suas fotos e detalhes.':'A categoria sairá dos filtros após a atualização. Você poderá recuperá-la na Lixeira.';
  $('#confirm-delete').hidden=blocked;$('#delete-dialog').showModal();
 }
+function openPurge(id){
+ const entry=id===null?null:(data.trash||[]).find(e=>e.id===id);if(id!==null&&!entry)return;
+ pendingDelete={action:'purge',id};$('#delete-title').textContent=id===null?'Esvaziar a lixeira?':'Excluir definitivamente?';
+ $('#delete-name').textContent=entry?entry.item.name:`${(data.trash||[]).length} ${(data.trash||[]).length===1?'item':'itens'} na lixeira`;
+ $('#delete-description').textContent=id===null?'Todos os produtos e categorias da lixeira serão apagados, inclusive os que não aparecem na busca atual. Não será possível restaurá-los pelo painel. Os cadastros ativos serão preservados.':'Este cadastro será apagado da lixeira. Não será possível restaurá-lo pelo painel.';
+ $('#delete-error').textContent='';$('#confirm-delete').hidden=false;$('#confirm-delete').textContent=id===null?'Sim, esvaziar lixeira':'Excluir definitivamente';
+ try{purgeTrash(data,id);}catch(error){$('#delete-error').textContent=error.message;$('#confirm-delete').hidden=true;}
+ $('#delete-dialog').showModal();
+}
+$('#empty-trash').onclick=()=>{if(!busy&&(data.trash||[]).length)openPurge(null);};
 $('#cancel-delete').onclick=()=>$('#delete-dialog').close();
 $('#delete-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault();});
 $('#delete-dialog').addEventListener('close',()=>{pendingDelete=null;});
 $('#confirm-delete').onclick=async()=>{
  if(busy||!pendingDelete)return;
- const {kind,id}=pendingDelete;let next;
- try{next=removeCatalogItem(data,kind,id);}catch(error){$('#delete-error').textContent=error.message;return;}
- saving(true);$('#confirm-delete').textContent='Enviando…';
+ const {kind,id,action}=pendingDelete;let next;
+ try{next=action==='purge'?purgeTrash(data,id):removeCatalogItem(data,kind,id);}catch(error){$('#delete-error').textContent=error.message;return;}
+ saving(true);$('#confirm-delete').textContent=action==='purge'?'Apagando…':'Enviando…';
  try{await persist(next);$('#delete-dialog').close();render();monitorPublication();}
  catch(error){$('#delete-error').textContent=error.message;}
- finally{saving(false);$('#confirm-delete').textContent='Enviar para a lixeira';}
+ finally{saving(false);$('#confirm-delete').textContent=action==='purge'?(id===null?'Sim, esvaziar lixeira':'Excluir definitivamente'):'Enviar para a lixeira';}
 };
 $('#add-item').onclick=()=>view==='products'?openProduct():openCategory();
 $('#close-category').onclick=()=>$('#category-dialog').close();

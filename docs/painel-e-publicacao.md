@@ -65,4 +65,11 @@ O botão “Excluir” abre uma confirmação com o nome do item e a ação “C
 
 As novas exclusões enviam os cadastros para `trash` no catálogo, guardando nome, campos completos, fotos, posição e data da exclusão. “Lixeira” no menu permite buscar e restaurar. A recuperação preserva o código, a visibilidade anterior e a posição, dentro do limite da lista atual. Se a categoria original também estiver na lixeira, restaurar o produto recupera essa categoria junto. Conflitos de código bloqueiam a operação sem perder o item. Categorias com produtos ativos continuam protegidas contra exclusão.
 
-O catálogo público e as páginas não incluem o conteúdo da lixeira. O repositório continua público por escolha do proprietário. Os itens não expiram automaticamente. Não há exclusão permanente no painel. Exclusões realizadas antes da introdução da lixeira não entram automaticamente nela e continuam disponíveis apenas no histórico Git.
+O catálogo público e as páginas não incluem o conteúdo da lixeira. O repositório continua público por escolha do proprietário. Os itens não expiram automaticamente. A exclusão permanente pelo painel está descrita abaixo. Exclusões realizadas antes da introdução da lixeira não entram automaticamente nela e continuam disponíveis apenas no histórico Git.
+
+
+### Exclusão definitiva e esvaziamento
+
+Na lixeira, “Excluir definitivamente” remove o cadastro selecionado após confirmação com seu nome. “Esvaziar lixeira” remove todos os itens, mesmo com busca ativa, após confirmação mostrando a quantidade total. Cancelar fica focado inicialmente. Categorias necessárias para restaurar produtos ainda na lixeira não podem ser apagadas individualmente; restaurar a categoria ou apagar esses produtos primeiro. Esvaziar remove todos juntos. Produtos e categorias ativos permanecem intactos. A gravação mantém proteção contra conflitos e preserva os itens em caso de falha.
+
+Essas ações impedem recuperação pela lixeira do painel. Não apagam histórico Git nem arquivos de fotos, que podem ser compartilhados com outros cadastros.
