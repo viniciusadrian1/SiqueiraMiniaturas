@@ -1,3 +1,4 @@
+import {validateAvailability} from '../product-data.js';
 import {adminSettings} from './settings.js';
 export class CatalogStore {
  constructor(token,request=(...args)=>globalThis.fetch(...args)){this.token=token;this.request=request;this.base=`https://api.github.com/repos/${adminSettings.repo}`;}
@@ -34,6 +35,7 @@ export function validateCatalog(data){
   if(!Array.isArray(list))throw new Error('Catálogo inválido.');
   const ids=new Set();for(const item of list){if(!/^[a-z0-9-]+$/.test(item.id)||ids.has(item.id)||!item.name?.trim())throw new Error('Preencha o nome e confira os itens duplicados.');ids.add(item.id);}
  }
+ for(const p of data.products)validateAvailability(p.availability);
  const ids=new Set(data.categories.map(c=>c.id));
  for(const p of data.products)if(!ids.has(p.category)||!p.image)throw new Error('Escolha uma categoria e uma foto para cada produto.');
 }

@@ -1,3 +1,4 @@
+import {validateAvailability,availabilityInfo} from '../product-data.js';
 import {CatalogStore,newId} from './store.js';
 import {escapeHTML as esc,imageURL,publicCatalog} from '../catalog-data.js';
 const $=selector=>document.querySelector(selector),form=$('#product-form');
@@ -18,7 +19,7 @@ function render(){
  $('#search').placeholder=products?'Nome do produto…':'Nome da categoria…';$('#visibility').hidden=!products;
  const visible=p=>p.published!==false&&data.categories.find(c=>c.id===p.category)?.visible!==false;
  const list=data[view].filter(p=>p.name.toLocaleLowerCase('pt-BR').includes(query)&&(!products||filter==='all'||visible(p)===(filter==='visible')));
- $('#items').innerHTML=list.map(p=>products?`<article class="product"><img class="product-image" src="${esc(image(p.image))}" alt="${esc(p.name)}"><div class="product-body"><div class="product-meta"><span>${esc(data.categories.find(c=>c.id===p.category)?.name)}</span><span class="badge ${visible(p)?'':'off'}">${visible(p)?'No mostruário':'Oculto'}</span></div><h2>${esc(p.name)}</h2><p class="price">${esc(price(p.price))}</p><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar produto</button><button class="quiet" data-toggle="${esc(p.id)}">${p.published===false?'Mostrar':'Ocultar'}</button></div></div></article>`:`<article class="category-card"><div><h2>${esc(p.name)}</h2><p>${data.products.filter(x=>x.category===p.id).length} produto(s) · ${p.visible===false?'Oculta':'Visível no site'}</p></div><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Adicione um novo item ou ajuste sua busca.</p></div>';
+ $('#items').innerHTML=list.map(p=>products?`<article class="product"><img class="product-image" src="${esc(image(p.image))}" alt="${esc(p.name)}"><div class="product-body"><div class="product-meta"><span>${esc(data.categories.find(c=>c.id===p.category)?.name)}</span><span class="badge ${visible(p)?'':'off'}">${visible(p)?'No mostruário':'Oculto'}</span></div>${p.tag?`<span class="card-tag">${esc(p.tag)}</span>`:''}<h2>${esc(p.name)}</h2><p class="card-arrival">${esc(availabilityInfo(p).title)}</p><p class="price">${esc(price(p.price))}</p><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar produto</button><button class="quiet" data-toggle="${esc(p.id)}">${p.published===false?'Mostrar':'Ocultar'}</button></div></div></article>`:`<article class="category-card"><div><h2>${esc(p.name)}</h2><p>${data.products.filter(x=>x.category===p.id).length} produto(s) · ${p.visible===false?'Oculta':'Visível no site'}</p></div><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Adicione um novo item ou ajuste sua busca.</p></div>';
 }
 function leave(){if(busy||photoLoading)return false;return !dirty||confirm('Você tem alterações não salvas. Deseja descartá-las?');}
 function list(){dirty=false;photo=null;$('#editor').hidden=true;$('#listing').hidden=false;render();window.scrollTo({top:0,behavior:'instant'});}
@@ -29,12 +30,26 @@ function openProduct(id){
  for(const key of ['name','price','subtitle','detail','tag','category'])form.elements[key].value=editing?.[key]||'';
  form.elements.published.checked=editing?editing.published!==false:true;form.elements.illustrative.checked=editing?.illustrative===true;
  $('#photo-preview').hidden=!editing?.image;$('#photo-placeholder').hidden=!!editing?.image;if(editing?.image)$('#photo-preview').src=image(editing.image);
+ form.elements.availabilityStatus.value=editing?.availability?.status||'consult';
+ form.elements.availabilityMode.value=editing?.availability?.mode||'unknown';
+ form.elements.availabilityDays.value=editing?.availability?.days||'';
+ form.elements.availabilityDate.value=editing?.availability?.date||'';
+ form.elements.availabilityNote.value=editing?.availability?.note||'';
+ updateAvailability();
  $('#save-hint').textContent='As alterações vão para o site depois de salvar.';
  $('#listing').hidden=true;$('#editor').hidden=false;updatePreview();window.scrollTo({top:0,behavior:'instant'});
 }
+function updateAvailability(){
+ const incoming=['incoming','order'].includes(form.elements.availabilityStatus.value),mode=form.elements.availabilityMode.value;
+ $('#arrival-fields').hidden=!incoming;$('#arrival-days').hidden=!incoming||mode!=='days';$('#arrival-date').hidden=!incoming||mode!=='date';
+ form.elements.availabilityDays.required=incoming&&mode==='days';form.elements.availabilityDays.disabled=!incoming||mode!=='days';
+ form.elements.availabilityDate.required=incoming&&mode==='date';form.elements.availabilityDate.disabled=!incoming||mode!=='date';
+}
+form.elements.availabilityStatus.addEventListener('change',updateAvailability);
+form.elements.availabilityMode.addEventListener('change',updateAvailability);
 function updatePreview(){$('#preview-name').textContent=form.elements.name.value||'O nome da sua peça';$('#preview-price').textContent=price(form.elements.price.value);}
 function openCategory(id){editingCategory=data.categories.find(c=>c.id===id)||null;const f=$('#category-form');f.reset();f.elements.name.value=editingCategory?.name||'';f.elements.visible.checked=editingCategory?.visible!==false;$('#category-title').textContent=editingCategory?'Editar categoria':'Nova categoria';$('#category-error').textContent='';$('#category-dialog').showModal();}
-function saving(value){busy=value;document.querySelectorAll('#workspace button, #category-dialog button, #category-dialog input, #product-form input, #product-form select, #product-form textarea').forEach(b=>b.disabled=value);$('#save').textContent=value?'Salvando…':'Salvar produto';}
+function saving(value){busy=value;document.querySelectorAll('#workspace button, #category-dialog button, #category-dialog input, #product-form input, #product-form select, #product-form textarea').forEach(b=>b.disabled=value);$('#save').textContent=value?'Salvando…':'Salvar produto';if(!value)updateAvailability();}
 async function persist(next,newPhoto){
  if(preview){data=structuredClone(next);return;}
  await store.save(next,newPhoto);data=next;
@@ -69,6 +84,10 @@ form.addEventListener('submit',async event=>{
  if(!photo&&!editing?.image){notice('Escolha uma foto para o produto.',true);$('#photo').focus();return;}
  const fields=new FormData(form),product={...editing,id:editing?.id||newId(fields.get('name')),image:photo?'/'+photo.path:editing.image};
  for(const key of ['name','price','subtitle','detail','tag','category'])product[key]=String(fields.get(key)||'').trim();
+ product.availability={status:form.elements.availabilityStatus.value,mode:form.elements.availabilityMode.value,note:form.elements.availabilityNote.value.trim()};
+ if(product.availability.mode==='days')product.availability.days=Number(form.elements.availabilityDays.value);
+ if(product.availability.mode==='date')product.availability.date=form.elements.availabilityDate.value;
+ try{validateAvailability(product.availability);}catch(error){notice(error.message,true);return;}
  product.published=form.elements.published.checked;product.illustrative=form.elements.illustrative.checked;
  product.label=data.categories.find(c=>c.id===product.category)?.name.toLocaleUpperCase('pt-BR')||'';
  if(photo)delete product.imagePosition;

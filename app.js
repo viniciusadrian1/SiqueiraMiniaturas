@@ -1,3 +1,4 @@
+import { productURL,availabilityInfo,productMessage,displayPrice } from './product-data.js';
 import { whatsappURL } from './catalog.js';
 import { escapeHTML as esc, imageURL, publicCatalog } from './catalog-data.js';
 let products = [];
@@ -21,7 +22,6 @@ let expanded = false;
 const search = document.querySelector('#search');
 const grid = document.querySelector('#products');
 const more = document.querySelector('#show-more');
-const dialog = document.querySelector('#product-dialog');
 const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 function art(product, extraClass = '') {
   const label = esc(`${product.illustrative ? 'Imagem ilustrativa: ' : ''}${product.name}`);
@@ -34,7 +34,7 @@ function render() {
   const query = normalize(search.value.trim());
   const matches = products.filter(p => (category === 'all' || p.category === category) && normalize(`${p.name} ${p.category} ${p.subtitle || ""}`).includes(query));
   const shown = expanded ? matches : matches.slice(0, 4);
-  grid.innerHTML = shown.map(p => `<article class="product-card"><button class="product-art" data-product="${esc(p.id)}" aria-label="Ver detalhes de ${esc(p.name)}">${art(p)}${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<span class="product-open" aria-hidden="true">Ver detalhes</span><span class="product-swatch" style="--swatch:#ec3b30" aria-hidden="true"></span></button><div class="product-label"><span>${esc(p.label)}</span><span>Nº ${String(products.indexOf(p) + 1).padStart(2, '0')}</span></div><button class="product-name" data-product="${esc(p.id)}">${esc(p.name)}</button><p>${esc(p.subtitle)}</p>${p.price ? `<p class="product-price">${esc(p.price)}</p>` : ''}<div class="product-foot"><a href="${whatsappURL(`Olá! Vi ${p.name} no site da Siqueira Miniaturas. Vocês têm alguma peça nesse estilo? Gostaria de ver fotos reais, valores e disponibilidade.`)}" target="_blank" rel="noopener noreferrer" aria-label="Consultar ${esc(p.name)} pelo WhatsApp">Consultar pelo WhatsApp</a></div></article>`).join('');
+  grid.innerHTML = shown.map(p => `<article class="product-card"><a class="product-art" href="${productURL(p)}" aria-label="Ver detalhes de ${esc(p.name)}">${art(p)}${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<span class="product-open" aria-hidden="true">Ver detalhes</span><span class="product-swatch" style="--swatch:#ec3b30" aria-hidden="true"></span></a><div class="product-label"><span>${esc(p.label)}</span><span>Nº ${String(products.indexOf(p) + 1).padStart(2, '0')}</span></div><a class="product-name" href="${productURL(p)}">${esc(p.name)}</a><p>${esc(p.subtitle)}</p>${p.price ? `<p class="product-price">${esc(displayPrice(p.price))}</p>` : ''}<p class="product-availability">${esc(availabilityInfo(p).title)}</p><div class="product-foot"><a href="${whatsappURL(productMessage(p))}" target="_blank" rel="noopener noreferrer" aria-label="Consultar ${esc(p.name)} pelo WhatsApp">${esc(availabilityInfo(p).action)}</a></div></article>`).join('');
   document.querySelector('#results-count').textContent = `${String(shown.length).padStart(2, '0')} de ${String(matches.length).padStart(2, '0')} peças`;
   document.querySelector('#empty').hidden = matches.length > 0;
   document.querySelector('#empty h3').textContent = products.length ? 'Nenhuma peça por aqui.' : 'A próxima peça da sua coleção está chegando.';
@@ -55,16 +55,6 @@ document.querySelector('.filters').addEventListener('click', event => {
 search.addEventListener('input', () => { expanded = false; render(); });
 more.addEventListener('click', () => { expanded = !expanded; render(); });
 document.querySelector('#reset-search').addEventListener('click', () => { search.value = ''; document.querySelector('[data-category="all"]').click(); search.focus(); });
-grid.addEventListener('click', event => {
-  const button = event.target.closest('[data-product]');
-  if (!button) return;
-  const p = products.find(item => item.id === button.dataset.product);
-  document.querySelector('#dialog-content').innerHTML = `<div class="dialog-art">${art(p)}</div><div class="dialog-info"><div class="eyebrow dark">${esc(p.label)} / MOSTRUÁRIO</div><h2 id="dialog-title">${esc(p.name)}</h2><p>${esc(p.detail)}</p><div class="dialog-note">${p.illustrative ? 'Imagem e produto demonstrativos. ' : ''}Valores e disponibilidade confirmados no atendimento.</div><a class="button button-red" href="${whatsappURL(`Olá! Tenho interesse em uma peça ${p.name}, que vi no site. Pode me enviar as opções disponíveis?`)}" target="_blank" rel="noopener noreferrer">${icon('chat')} Consultar pelo WhatsApp</a></div>`;
-  dialog.showModal();
-});
-document.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
-
 async function loadCatalog() {
   grid.setAttribute('aria-busy', 'true');
   more.hidden = true;

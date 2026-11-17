@@ -30,3 +30,11 @@ Testes cobrem autenticação, publicação conjunta de foto e catálogo, preserv
 ## Mobile
 
 A capa usa uma cena vertical de altura de tela, com enquadramento do carro, gradientes de contraste e textos sobre a imagem. A sequência continua ligada à rolagem. Desktop mantém sua composição. Reduced motion mantém a imagem estática.
+
+## Páginas de produto e importação
+
+Cada produto visível ganha uma página em `/produto/ID/`, gerada no build com foto, etiqueta, descrição, preço e disponibilidade. Foto e título no catálogo abrem essa página; não há pop-up. Produtos ocultos e categorias ocultas não geram páginas. Os links podem ser compartilhados diretamente.
+
+No editor, **Etiqueta de destaque** está sempre visível. **Disponibilidade** oferece consultar, pronta entrega, a caminho ou sob encomenda. Para importados, escolher prazo de 1 a 365 dias, data prevista válida ou ainda sem previsão. A observação é opcional. Produtos antigos continuam sob consulta.
+
+A caminho exibe **Quero reservar**, que abre o WhatsApp com o nome e link da peça. Isso registra interesse no atendimento, sem confirmar uma reserva automaticamente. O prazo em dias é uma estimativa informada, não uma contagem regressiva. Datas vencidas são apresentadas como previsão em atualização quando a página é gerada novamente. Atualizar a previsão e salvar quando necessário.
