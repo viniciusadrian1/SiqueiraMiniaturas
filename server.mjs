@@ -21,7 +21,7 @@ http.createServer(async (req, res) => {
     const route = pathname === '/' ? '/index.html' : /^\/admin\/?$/.test(pathname) ? '/admin/index.html' : pathname;
     const target = path.resolve(root, '.' + route);
     const relative = path.relative(root, target);
-    const rootFiles = ['index.html','app.js','catalog.js','catalog-data.js','product-data.js','product.css','motion.js','motion.css','hero-refinement.css','showcase.css','responsive.css'];
+    const rootFiles = ['index.html','app.js','catalog.js','catalog-data.js','product-data.js','product.css','product-gallery.js','motion.js','motion.css','hero-refinement.css','showcase.css','responsive.css'];
     const allowed = rootFiles.includes(relative) || /^(assets|admin|content)[\\/]/.test(relative);
     if (!allowed || relative.startsWith('..') || path.isAbsolute(relative) || !types[path.extname(target)] || relative.split(path.sep).some(p => p.startsWith('.'))) {
       res.writeHead(404); return res.end('Não encontrado');

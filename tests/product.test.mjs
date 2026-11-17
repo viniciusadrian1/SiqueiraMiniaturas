@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
+import {productImages,availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
 import {renderProductPage} from '../lib/product-page.js';
 const product={id:'rb22-mc',name:'Miniatura especial',image:'/assets/uploads/real.jpg',category:'miniaturas',tag:'Edição Limitada',detail:'Detalhes da peça.\nSegunda linha.'};
 test('existing products never gain an invented ready-to-ship promise',()=>assert.equal(availabilityInfo(product).status,'consult'));
@@ -20,4 +20,13 @@ test('product page has a durable URL, visible tag, description, and escaped user
  const html=renderProductPage({...product,name:'<img onerror=alert(1)>',tag:'<script>bad</script>'},[{id:'miniaturas',name:'Miniaturas'}]);
  assert.equal(productURL(product),'/produto/rb22-mc/');assert.match(html,/class="product-tag"/);assert.match(html,/Detalhes da peça/);
  assert.ok(!html.includes('<script>bad'));assert.match(html,/&lt;img/);assert.ok(!html.includes('<dialog'));
+});
+
+test('gallery preserves legacy cover and renders all additional photos with navigation',()=>{
+ assert.deepEqual(productImages(product),[product.image]);
+ const p={...product,images:[product.image,'/assets/uploads/back.webp','/assets/uploads/side.jpg']};
+ const html=renderProductPage(p,[]);
+ assert.equal((html.match(/class="gallery-slide"/g)||[]).length,3);
+ assert.match(html,/data-gallery-next/);assert.match(html,/foto 3 de 3/);
+ assert.deepEqual(productImages({...p,images:[product.image,product.image]}),[product.image]);
 });

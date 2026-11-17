@@ -47,3 +47,11 @@ test('category changes cannot strand existing products',()=>{
  assert.throws(()=>validateCatalog({...data,categories:[]}),/categoria/);
  assert.throws(()=>validateCatalog({...data,products:[data.products[0],data.products[0]]}),/duplicados/);
 });
+
+test('multiple photos are committed with the catalog in one branch update',async()=>{
+ const {calls,request}=mock(),store=new CatalogStore('test-token',request);await store.load();
+ await store.save(data,[{path:'assets/uploads/front.jpg',base64:'YWJj'},{path:'assets/uploads/back.webp',base64:'YWJj'}]);
+ assert.equal(calls.filter(c=>c.path.endsWith('/git/blobs')).length,2);
+ assert.equal(calls.find(c=>c.path.endsWith('/git/trees')).body.tree.length,3);
+ assert.equal(calls.filter(c=>c.method==='PATCH').length,1);
+});

@@ -38,3 +38,9 @@ Cada produto visível ganha uma página em `/produto/ID/`, gerada no build com f
 No editor, **Etiqueta de destaque** está sempre visível. **Disponibilidade** oferece consultar, pronta entrega, a caminho ou sob encomenda. Para importados, escolher prazo de 1 a 365 dias, data prevista válida ou ainda sem previsão. A observação é opcional. Produtos antigos continuam sob consulta.
 
 A caminho exibe **Quero reservar**, que abre o WhatsApp com o nome e link da peça. Isso registra interesse no atendimento, sem confirmar uma reserva automaticamente. O prazo em dias é uma estimativa informada, não uma contagem regressiva. Datas vencidas são apresentadas como previsão em atualização quando a página é gerada novamente. Atualizar a previsão e salvar quando necessário.
+
+## Galeria de fotos
+
+Adicionar até 10 fotos JPG, PNG ou WebP por produto, com até 5 MB cada. A seleção aceita múltiplos arquivos e novas seleções acrescentam fotos. “Usar como capa” coloca a foto primeiro; “Remover” retira a imagem da galeria sem apagar o arquivo histórico do repositório. Todas as fotos novas e o cadastro são publicados no mesmo commit. O campo `image` guarda a capa, e `images` guarda a sequência completa. Cadastros antigos continuam funcionando sem alteração.
+
+A página permite deslizar horizontalmente pelo celular, usar miniaturas, setas ou as teclas esquerda/direita com a galeria focada. O indicador acompanha a foto selecionada.

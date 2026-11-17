@@ -18,7 +18,8 @@ export class CatalogStore {
   if(current.sha!==this.sha)throw new Error('O catálogo mudou em outra janela. Recarregue antes de salvar para preservar as alterações.');
   const parent=await this.api(`/git/commits/${current.head}`);
   const tree=[{path:'content/catalog.json',mode:'100644',type:'blob',content:JSON.stringify(data,null,2)+'\n'}];
-  if(photo){
+  for(const photoItem of (Array.isArray(photo)?photo:photo?[photo]:[])){
+   const photo=photoItem;
    if(!/^assets\/uploads\/[a-z0-9-]+\.(jpg|png|webp)$/.test(photo.path))throw new Error('Nome de foto inválido.');
    const blob=await this.api('/git/blobs','POST',{content:photo.base64,encoding:'base64'});
    tree.push({path:photo.path,mode:'100644',type:'blob',sha:blob.sha});

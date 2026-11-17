@@ -14,7 +14,7 @@ for(const p of data.products)validateAvailability(p.availability);
 const categories=new Set(data.categories.map(c=>c.id));
 for(const p of data.products)if(!categories.has(p.category))throw new Error(`Categoria inexistente: ${p.name}. Reassocie as peças antes de remover uma categoria.`);
 await mkdir('dist',{recursive:true});
-for(const file of ['index.html','motion.css','hero-refinement.css','showcase.css','responsive.css','motion.js','app.js','catalog.js','catalog-data.js','product-data.js','product.css','assets'])await cp(file,`dist/${file}`,{recursive:true});
+for(const file of ['index.html','motion.css','hero-refinement.css','showcase.css','responsive.css','motion.js','app.js','catalog.js','catalog-data.js','product-data.js','product.css','product-gallery.js','assets'])await cp(file,`dist/${file}`,{recursive:true});
 await mkdir('dist/admin',{recursive:true});
 for(const file of ['index.html','admin.css','admin.js','store.js','settings.js'])await cp(`admin/${file}`,`dist/admin/${file}`);
 await mkdir('dist/content',{recursive:true});

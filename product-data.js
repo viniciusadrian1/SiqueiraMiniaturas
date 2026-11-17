@@ -24,3 +24,5 @@ export function availabilityInfo(product,today=new Intl.DateTimeFormat('sv-SE',{
 }
 export function productMessage(product){const a=availabilityInfo(product);return `Olá! ${a.reserve?'Quero saber como reservar':'Tenho interesse em'} ${product.name}, que vi na Siqueira Miniaturas. ${a.reserve?'Pode confirmar a previsão de chegada e as condições de reserva?':'Pode confirmar a disponibilidade e os detalhes?'} ${'https://siqueiraminiaturas.vercel.app'+productURL(product)}`;}
 export function displayPrice(value){return value?(String(value).trim().startsWith('R$')?String(value).trim():`R$ ${String(value).trim()}`):'Valor sob consulta';}
+
+export function productImages(product){return [...new Set([product.image,...(Array.isArray(product.images)?product.images:[])].filter(value=>typeof value==='string'&&value))];}
