@@ -18,6 +18,31 @@
   ],
   "products": [
     {
+      "id": "miniatura-rb22-max-verstappen-bburago-ee5bf4b3",
+      "image": "/assets/uploads/produto-1002a8f8.png",
+      "images": [
+        "/assets/uploads/produto-1002a8f8.png",
+        "/assets/uploads/produto-94f05082.png",
+        "/assets/uploads/produto-c60cb1de.png",
+        "/assets/uploads/produto-3ff57ec9.png"
+      ],
+      "name": "Miniatura RB22 Max Verstappen Bburago",
+      "price": "129,90",
+      "subtitle": "Escala 1:43 - Temporada 2026",
+      "detail": "Marca: Bburago\nModelo: RB22\nEscala: 1:43\nPiloto: Max Verstappen Nº 3\nEquipe: Redbull Racing\nRéplica detalhada do carro de corrida RB22",
+      "tag": "Novidade",
+      "category": "miniaturas",
+      "availability": {
+        "status": "incoming",
+        "mode": "days",
+        "note": "Lote em importação",
+        "days": 15
+      },
+      "published": true,
+      "illustrative": false,
+      "label": "MINIATURAS"
+    },
+    {
       "illustrative": false,
       "price": "139,90",
       "name": "Miniatura RB22 Max Verstappen McDonald's",
