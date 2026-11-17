@@ -44,3 +44,7 @@ A caminho exibe **Quero reservar**, que abre o WhatsApp com o nome e link da pe�
 Adicionar até 10 fotos JPG, PNG ou WebP por produto, com até 5 MB cada. A seleção aceita múltiplos arquivos e novas seleções acrescentam fotos. “Usar como capa” coloca a foto primeiro; “Remover” retira a imagem da galeria sem apagar o arquivo histórico do repositório. Todas as fotos novas e o cadastro são publicados no mesmo commit. O campo `image` guarda a capa, e `images` guarda a sequência completa. Cadastros antigos continuam funcionando sem alteração.
 
 A página permite deslizar horizontalmente pelo celular, usar miniaturas, setas ou as teclas esquerda/direita com a galeria focada. O indicador acompanha a foto selecionada.
+
+### Ordem das fotos
+
+Arraste pela alça “Arrastar” para mover uma foto até outra posição. Funciona com mouse e toque; ao chegar perto da borda da tela, a página rola durante o arraste. A primeira foto vira a capa. Pelo teclado, focar a alça e usar as setas. A ordem só é publicada ao salvar o produto. Cancelar o arraste não altera a sequência.

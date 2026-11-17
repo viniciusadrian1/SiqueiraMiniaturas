@@ -1,3 +1,4 @@
+import {photoSort} from './photo-sort.js';
 import {productImages} from '../product-data.js';
 import {validateAvailability,availabilityInfo} from '../product-data.js';
 import {CatalogStore,newId} from './store.js';
@@ -70,8 +71,14 @@ form.addEventListener('input',()=>{dirty=true;updatePreview();$('#save-hint').te
 function renderPhotos(){
  $('#photo-preview').hidden=!photos.length;$('#photo-placeholder').hidden=!!photos.length;
  if(photos.length)$('#photo-preview').src=photos[0].url||image(photos[0].path);
- $('#photo-list').innerHTML=photos.map((p,i)=>`<div class="photo-item"><img src="${esc(p.url||image(p.path))}" alt="Foto ${i+1}"><span>${i===0?'Capa':'Foto '+(i+1)}</span><button type="button" data-cover="${i}" ${i===0?'disabled':''}>Usar como capa</button><button type="button" data-remove="${i}" aria-label="Remover foto ${i+1}">Remover</button></div>`).join('');
+ $('#photo-list').innerHTML=photos.map((p,i)=>`<div class="photo-item" data-photo-index="${i}"><button type="button" class="photo-drag-handle" data-sort-photo aria-label="Mover foto ${i+1}. Arraste ou use as setas do teclado." aria-pressed="false">⠿ <span>Arrastar</span></button><img src="${esc(p.url||image(p.path))}" alt="Foto ${i+1}"><span>${i===0?'Capa':'Foto '+(i+1)}</span><button type="button" data-cover="${i}" ${i===0?'disabled':''}>Usar como capa</button><button type="button" data-remove="${i}" aria-label="Remover foto ${i+1}">Remover</button></div>`).join('');
 }
+photoSort($('#photo-list'),{canMove:()=>!busy&&!photoLoading,onMove:(from,to)=>{
+ const [item]=photos.splice(from,1);photos.splice(to,0,item);dirty=true;renderPhotos();
+ $('#save-hint').textContent='Ordem das fotos alterada. Salve o produto para publicar.';
+ $('#photo-order-status').textContent=`Foto movida para a posição ${to+1}${to===0?', como capa':''}.`;
+ $('#photo-list').querySelector(`[data-photo-index="${to}"] [data-sort-photo]`)?.focus({preventScroll:true});
+}});
 $('#photo-list').addEventListener('click',e=>{
  if(busy||photoLoading)return;
  const cover=e.target.closest('[data-cover]'),remove=e.target.closest('[data-remove]');
