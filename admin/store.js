@@ -41,3 +41,10 @@ export function validateCatalog(data){
  for(const p of data.products)if(!ids.has(p.category)||!p.image)throw new Error('Escolha uma categoria e uma foto para cada produto.');
 }
 export function newId(name){return (name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45)||'peca')+'-'+crypto.randomUUID().slice(0,8);}
+
+export function removeCatalogItem(data,kind,id){
+ if(!['products','categories'].includes(kind))throw new Error('Tipo de item inválido.');
+ if(!data[kind].some(item=>item.id===id))throw new Error('Esse item não está mais no catálogo. Atualize a lista.');
+ if(kind==='categories'&&data.products.some(p=>p.category===id))throw new Error('Esta categoria tem produtos vinculados. Mova os produtos para outra categoria ou exclua essas peças antes de apagar a categoria.');
+ const next=structuredClone(data);next[kind]=next[kind].filter(item=>item.id!==id);return next;
+}

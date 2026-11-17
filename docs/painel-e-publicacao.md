@@ -56,3 +56,7 @@ Na lista completa de Produtos, arrastar pela alça “Arrastar produto” até a
 ### Ordem das categorias
 
 Em Categorias, arrastar pela alça para escolher a sequência dos filtros. A ordem é salva automaticamente e aparece após o deploy. Limpar a busca antes de reorganizar. “Todas as peças” permanece primeiro; categorias ocultas não aparecem nos filtros, preservando suas posições no cadastro. O mesmo controle aceita toque, mouse e teclado.
+
+### Excluir produtos e categorias
+
+O botão “Excluir” abre uma confirmação com o nome do item e a ação “Cancelar” focada inicialmente. Somente “Sim, excluir” grava a remoção. Categorias com produtos vinculados, inclusive ocultos, ficam bloqueadas até os produtos serem movidos ou excluídos. A gravação mantém a proteção contra alterações simultâneas; se falhar, o item permanece e a confirmação mostra o erro. A exclusão retira o cadastro e a página gerada na próxima publicação; arquivos de fotos e histórico Git permanecem preservados.

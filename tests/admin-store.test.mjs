@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CatalogStore,validateCatalog} from '../admin/store.js';
+import {CatalogStore,validateCatalog,removeCatalogItem} from '../admin/store.js';
 const data={categories:[{id:'miniaturas',name:'Miniaturas'}],products:[{id:'real',name:'Peça real',category:'miniaturas',image:'/assets/uploads/real.jpg'}]};
 const encoded=Buffer.from(JSON.stringify(data)).toString('base64');
 test('default request preserves the browser fetch receiver',async()=>{
@@ -54,4 +54,15 @@ test('multiple photos are committed with the catalog in one branch update',async
  assert.equal(calls.filter(c=>c.path.endsWith('/git/blobs')).length,2);
  assert.equal(calls.find(c=>c.path.endsWith('/git/trees')).body.tree.length,3);
  assert.equal(calls.filter(c=>c.method==='PATCH').length,1);
+});
+
+test('deletion removes only the selected item without mutating the current catalog',()=>{
+ const next=removeCatalogItem(data,'products','real');
+ assert.equal(next.products.length,0);assert.equal(data.products.length,1);assert.deepEqual(next.categories,data.categories);
+ const empty={categories:[...data.categories,{id:'empty',name:'Empty'}],products:data.products};
+ assert.deepEqual(removeCatalogItem(empty,'categories','empty').categories,data.categories);
+});
+test('linked categories are protected even when their products are hidden',()=>{
+ assert.throws(()=>removeCatalogItem({...data,products:[{...data.products[0],published:false}]},'categories','miniaturas'),/vinculados/);
+ assert.throws(()=>removeCatalogItem(data,'products','missing'),/não está mais/);
 });
