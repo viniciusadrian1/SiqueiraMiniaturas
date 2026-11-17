@@ -48,3 +48,7 @@ A página permite deslizar horizontalmente pelo celular, usar miniaturas, setas 
 ### Ordem das fotos
 
 Arraste pela alça “Arrastar” para mover uma foto até outra posição. Funciona com mouse e toque; ao chegar perto da borda da tela, a página rola durante o arraste. A primeira foto vira a capa. Pelo teclado, focar a alça e usar as setas. A ordem só é publicada ao salvar o produto. Cancelar o arraste não altera a sequência.
+
+### Ordem dos produtos no mostruário
+
+Na lista completa de Produtos, arrastar pela alça “Arrastar produto” até a posição desejada. A ordem é salva automaticamente no catálogo e refletida no site após o deploy. Busca ou filtro ativo bloqueiam o arraste para evitar mover itens em uma lista incompleta. Produtos ocultos preservam sua posição na sequência; o site apenas os exclui da exibição. O mesmo controle aceita mouse, toque e setas do teclado. Se a gravação falhar ou houver conflito com outra janela, a ordem anterior é preservada e o painel informa o erro.
