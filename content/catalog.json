@@ -20,13 +20,15 @@
     {
       "illustrative": false,
       "price": "139,90",
-      "name": "Miniatura RB22 Max Verstappen McDonald's ",
+      "name": "Miniatura RB22 Max Verstappen McDonald's",
       "published": true,
-      "detail": "\n",
+      "detail": "",
       "subtitle": "Escala 1:43 - Temporada 2026 - Edição Limitada",
       "id": "rb22-mc",
       "image": "/assets/uploads/screenshot_20261117_015346_instagram.jpg",
-      "category": "miniaturas"
+      "category": "miniaturas",
+      "tag": "Edição Limitada",
+      "label": "MINIATURAS"
     }
   ]
 }
