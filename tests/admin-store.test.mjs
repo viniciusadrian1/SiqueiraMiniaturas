@@ -3,6 +3,13 @@ import assert from 'node:assert/strict';
 import {CatalogStore,validateCatalog} from '../admin/store.js';
 const data={categories:[{id:'miniaturas',name:'Miniaturas'}],products:[{id:'real',name:'Peça real',category:'miniaturas',image:'/assets/uploads/real.jpg'}]};
 const encoded=Buffer.from(JSON.stringify(data)).toString('base64');
+test('default request preserves the browser fetch receiver',async()=>{
+ const original=globalThis.fetch;
+ try{
+  globalThis.fetch=function(){assert.equal(this,globalThis);return Promise.resolve({ok:true,json:async()=>({ok:true})});};
+  assert.deepEqual(await new CatalogStore('test-token').api('/test'),{ok:true});
+ }finally{globalThis.fetch=original;}
+});
 function mock({conflict=false,refFailure=false}={}){
  const calls=[];let reads=0;
  const request=async(url,options)=>{

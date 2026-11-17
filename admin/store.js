@@ -1,6 +1,6 @@
 import {adminSettings} from './settings.js';
 export class CatalogStore {
- constructor(token,request=fetch){this.token=token;this.request=request;this.base=`https://api.github.com/repos/${adminSettings.repo}`;}
+ constructor(token,request=(...args)=>globalThis.fetch(...args)){this.token=token;this.request=request;this.base=`https://api.github.com/repos/${adminSettings.repo}`;}
  async api(path,method='GET',body){
   const response=await this.request(this.base+path,{method,headers:{Authorization:`Bearer ${this.token}`,Accept:'application/vnd.github+json','Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(30000)});
   if(!response.ok){const error=new Error(response.status===401?'Sua sessão expirou. Entre novamente.':response.status===409||response.status===422?'O catálogo mudou em outra janela. Recarregue antes de salvar.':'Não foi possível concluir. Confira sua conexão e tente novamente.');error.status=response.status;throw error;}
