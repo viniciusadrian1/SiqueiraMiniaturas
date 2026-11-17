@@ -1,0 +1,21 @@
+node_modules/
+dist/
+admin/vendor/
+.env*
+.vercel/
+!.env.example
+
+# Local design explorations and previous versions
+/branding/
+/docs/version-*/
+/docs/preview-*
+/docs/carro-perolado-v2.md
+/docs/direcao-*.md
+/docs/prompt-video-siqueira.md
+/assets/concepts/
+/assets/hero.png
+/assets/hero-editorial.png
+/assets/collection-editorial.png
+/assets/motion-car.png
+/editorial.css
+/styles.css

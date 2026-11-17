@@ -1,0 +1,88 @@
+/* Final responsive composition: same identity, sized for the available space. */
+.fan-contact{padding:54px 6%;gap:9%;grid-template-columns:1.2fr 1fr;border-radius:12px}
+.fan-contact h2{font-size:clamp(42px,4.7vw,66px);line-height:1.04}
+.fan-intro>p:not(.section-kicker):not(.phone-label){font-size:17px;line-height:1.65;max-width:430px;margin-top:20px}
+.contact-invite{padding-left:32px;border-left:1px solid #454749}
+.contact-invite>p:first-child{font-size:18px;line-height:1.6;color:#e2e2dc}
+.contact-invite .button{margin-top:22px;font-size:14px;gap:10px}
+.contact-invite .phone-label{font-size:15px;margin-top:16px}
+.contact-caption{display:block;margin-top:24px;font-size:13px;line-height:1.5;color:#bfc2bd}
+.brand-footer{padding-top:62px}
+.footer-slogan{font-size:clamp(40px,4.6vw,64px);line-height:1.05;letter-spacing:-.5px;margin-bottom:36px}
+.footer-signoff .brand img{width:250px;max-width:100%}
+.product-card>p{color:#515658}.product-name{font-weight:600}
+.catalog-toolbar .filters{min-width:0}.filter{white-space:normal}
+.dialog-info{min-width:0}.dialog-info h2,.product-name{overflow-wrap:anywhere}
+@media(min-width:761px) and (max-width:1050px){
+ .header{grid-template-columns:1fr auto;grid-template-rows:auto auto;height:auto;padding:22px 30px 16px;row-gap:20px}
+ .header>.brand{grid-column:1/-1;grid-row:1}.header .brand img{width:290px}
+ .header nav{grid-column:1;grid-row:2;gap:24px;font-size:20px}
+ .header-contact{grid-column:2;grid-row:2}
+ .hero-title-left h1{font-size:64px}.hero-intro-note{max-width:200px}
+ .personal-studio{gap:5%}.studio-copy h2{font-size:56px}
+}
+@media(max-width:760px){
+ html{scroll-padding-top:16px}
+ .header{padding:18px 20px 12px;min-height:0;grid-template-columns:1fr;gap:17px;height:auto}
+ .header>.brand{grid-column:1;grid-row:1}.header .brand img{width:235px;max-width:100%}
+ .header nav{grid-row:2;grid-column:1;justify-self:stretch;justify-content:space-between;gap:12px;font:600 18px/1.2 'Barlow Condensed',sans-serif}
+ .header nav a{min-height:44px;display:flex;align-items:center}
+ .header-contact{display:none}
+ .scroll-scene{height:225svh;min-height:1250px}
+ .hero-frame{height:100svh;min-height:590px;max-height:860px}
+ .hero-title-left{top:24px;left:20px;right:20px}
+ .hero-title-left h1{font-size:clamp(43px,12.4vw,66px);line-height:.98;letter-spacing:-.5px}
+ .hero-intro-note{left:20px;right:20px;top:calc(24px + 25vw);max-width:none}
+ .hero-intro-note p{font:500 20px/1.25 'Barlow Condensed',sans-serif;margin-top:12px}
+ .hero-intro-note p br{display:none}
+ .hero-detail-copy{left:20px;right:20px;top:24px}
+ .hero-detail-copy h2{font-size:clamp(38px,10.5vw,58px);line-height:1.03;margin:0 0 14px;letter-spacing:-.4px}
+ .hero-detail-copy p{font-size:14px;line-height:1.5}
+ .race-media{left:12px;right:12px;top:28%;bottom:25%;aspect-ratio:auto;border-radius:10px}
+ .race-poster,.race-canvas{object-fit:cover;object-position:50% 50%}
+ .hero-bottom-left{left:20px;right:20px;bottom:15%;gap:7px;flex-direction:row;align-items:center;justify-content:space-between}
+ .hero-bottom-left .button{font-size:14px;min-height:48px;padding:14px 18px}
+ .hero-image-disclaimer{font-size:10px;max-width:80px;text-align:right;line-height:1.4}
+ .hero-feature{left:20px;right:20px;bottom:5%;gap:3px}
+ .hero-feature strong{font-size:14px}.hero-feature span.hero-feature-action{display:block;font-size:12px;line-height:1.5;margin:0;min-height:24px}
+ .scroll-indicator{bottom:1.2%;left:20px;right:auto;font-size:10px}
+ .showcase{padding:48px 20px 30px}.showcase-heading h2{font-size:clamp(39px,11.2vw,56px)}
+ .showcase-heading>p{font-size:15px}.catalog-toolbar{padding:9px;gap:10px}
+ .catalog-toolbar .filters{display:flex;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:6px;padding-bottom:3px;scrollbar-width:thin}
+ .filter{flex-shrink:0;white-space:nowrap;font-size:13px;min-height:44px;padding:12px 14px}
+ .search input{font-size:16px}.catalog-meta{font-size:12px;line-height:1.6}
+ .product-art{border-radius:10px;aspect-ratio:1.28}.products{gap:34px}
+ .product-name{font-size:29px}.product-card>p{font-size:14px;line-height:1.5}
+ .product-foot>a{display:flex;justify-content:center;min-height:46px;font-size:14px}
+ .catalog-bottom{align-items:stretch}.catalog-bottom .button{width:100%}
+ .passion-story{padding:35px 20px 55px;gap:20px}.passion-story h2{font-size:clamp(39px,11.2vw,54px)}
+ .passion-story p{font-size:16px;line-height:1.65}
+ .personal-studio{padding:0 20px 50px;gap:26px}.personal-studio figure img{height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:10px}
+ .studio-copy h2{font-size:clamp(42px,11.5vw,56px)}.studio-copy>p:not(.section-kicker){font-size:16px}
+ .studio-copy .button{width:100%;font-size:14px}.studio-copy .studio-note{max-width:none!important}
+ .fan-contact{margin:0 12px;padding:32px 24px;grid-template-columns:1fr;gap:26px;border-radius:10px}
+ .fan-contact h2{font-size:clamp(36px,10.4vw,48px)}
+ .fan-intro>p:not(.section-kicker):not(.phone-label){font-size:16px;margin-top:18px}
+ .contact-invite{border-left:0;padding:24px 0 0;border-top:1px solid #454749}
+ .contact-invite>p:first-child{font-size:16px}.contact-invite .button{width:100%;font-size:14px}
+ .contact-caption{margin-top:18px;font-size:12px}
+ .brand-footer{padding:42px 20px 24px}.footer-slogan{font-size:clamp(34px,9.8vw,44px);line-height:1.07;margin-bottom:28px}
+ .footer-signoff{gap:15px}.footer-signoff .brand img{width:220px}.footer-signoff .back-top{min-height:44px}
+ .brand-footer .footer-bottom{font-size:12px;line-height:1.65}
+ dialog{width:calc(100% - 24px);max-height:92dvh;border-radius:12px}
+ .dialog-art{max-height:none;width:100%;aspect-ratio:1.2}.dialog-art .sheet{aspect-ratio:1;height:auto}
+ .dialog-close{width:44px;height:44px;right:8px;top:8px;border-radius:6px}
+ .dialog-info{padding:22px}.dialog-info h2{font-size:34px}.dialog-info p{font-size:15px}.dialog-info .button{width:100%;font-size:13px}
+}
+@media(max-width:360px){
+ .hero-frame{min-height:620px}
+ .hero-detail-copy h2{font-size:32px}
+ .race-media{top:195px}
+ .hero-feature strong{font-size:13px}
+ .hero-feature span.hero-feature-action{font-size:12px}
+ .hero-bottom-left .button{font-size:13px;padding-inline:14px}
+}
+@media(max-height:600px) and (max-width:950px) and (orientation:landscape){
+ .scroll-scene{height:auto;min-height:0}.hero-frame{position:relative;height:640px;min-height:0;max-height:none}
+}
+@media(prefers-reduced-motion:reduce){.scroll-scene{height:auto;min-height:0}.hero-frame{position:relative}}

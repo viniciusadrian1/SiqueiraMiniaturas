@@ -1,0 +1,718 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@platejs/core": {
+      "name": "@platejs/core",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1237789,
+          "name": "@platejs/core",
+          "dependency": "@platejs/core",
+          "title": "@platejs/core HTML deserialization can trigger browser behavior during parsing",
+          "url": "https://github.com/advisories/GHSA-qrfj-mgw8-j9c6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<53.3.11"
+        }
+      ],
+      "effects": [
+        "@platejs/utils",
+        "platejs"
+      ],
+      "range": "<53.3.11",
+      "nodes": [
+        "node_modules/@platejs/core"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@platejs/utils": {
+      "name": "@platejs/utils",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@platejs/core"
+      ],
+      "effects": [],
+      "range": "<=52.3.21",
+      "nodes": [
+        "node_modules/@platejs/utils"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms": {
+      "name": "decap-cms",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "decap-cms-app",
+        "decap-cms-media-library-uploadcare"
+      ],
+      "effects": [],
+      "range": "2.11.0-beta.0 || >=3.16.1",
+      "nodes": [
+        "node_modules/decap-cms"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-app": {
+      "name": "decap-cms-app",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "decap-cms-backend-aws-cognito-github-proxy",
+        "decap-cms-backend-azure",
+        "decap-cms-backend-bitbucket",
+        "decap-cms-backend-forgejo",
+        "decap-cms-backend-git-gateway",
+        "decap-cms-backend-gitea",
+        "decap-cms-backend-github",
+        "decap-cms-backend-gitlab",
+        "decap-cms-backend-test",
+        "decap-cms-backend-turbo-github",
+        "decap-cms-backend-turbo-gitlab",
+        "decap-cms-core",
+        "decap-cms-lib-auth",
+        "decap-cms-ui-auth",
+        "decap-cms-widget-code",
+        "decap-cms-widget-file",
+        "decap-cms-widget-image",
+        "decap-cms-widget-list",
+        "decap-cms-widget-markdown",
+        "decap-cms-widget-relation",
+        "decap-cms-widget-richtext",
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/decap-cms-app"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-backend-aws-cognito-github-proxy": {
+      "name": "decap-cms-backend-aws-cognito-github-proxy",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-backend-github",
+        "decap-cms-lib-auth",
+        "decap-cms-ui-auth"
+      ],
+      "effects": [],
+      "range": ">=3.7.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-aws-cognito-github-proxy"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-azure": {
+      "name": "decap-cms-backend-azure",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [],
+      "range": "<=3.0.0 || >=3.5.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-azure"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-bitbucket": {
+      "name": "decap-cms-backend-bitbucket",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth",
+        "minimatch"
+      ],
+      "effects": [
+        "decap-cms-backend-git-gateway"
+      ],
+      "range": "<=3.0.0 || >=3.2.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-bitbucket"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-backend-forgejo": {
+      "name": "decap-cms-backend-forgejo",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [],
+      "range": ">=3.4.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-forgejo"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-git-gateway": {
+      "name": "decap-cms-backend-git-gateway",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-backend-bitbucket",
+        "decap-cms-backend-github",
+        "decap-cms-backend-gitlab",
+        "decap-cms-lib-auth",
+        "decap-cms-ui-auth",
+        "minimatch"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "<=3.0.0 || >=3.3.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-git-gateway"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-backend-gitea": {
+      "name": "decap-cms-backend-gitea",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [],
+      "range": ">=3.5.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-gitea"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-github": {
+      "name": "decap-cms-backend-github",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [
+        "decap-cms-backend-turbo-github"
+      ],
+      "range": "<=3.0.0 || >=3.8.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-github"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-gitlab": {
+      "name": "decap-cms-backend-gitlab",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [
+        "decap-cms-backend-turbo-gitlab"
+      ],
+      "range": "<=3.0.0 || >=3.6.2",
+      "nodes": [
+        "node_modules/decap-cms-backend-gitlab"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-backend-test": {
+      "name": "decap-cms-backend-test",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "<=3.2.1 || >=3.5.1",
+      "nodes": [
+        "node_modules/decap-cms-backend-test"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-backend-turbo-github": {
+      "name": "decap-cms-backend-turbo-github",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-backend-github"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/decap-cms-backend-turbo-github"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-backend-turbo-gitlab": {
+      "name": "decap-cms-backend-turbo-gitlab",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-backend-gitlab"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/decap-cms-backend-turbo-gitlab"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-core": {
+      "name": "decap-cms-core",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth",
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "<=3.2.1 || >=3.18.1",
+      "nodes": [
+        "node_modules/decap-cms-core"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-lib-auth": {
+      "name": "decap-cms-lib-auth",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms-backend-aws-cognito-github-proxy",
+        "decap-cms-backend-azure",
+        "decap-cms-backend-bitbucket",
+        "decap-cms-backend-forgejo",
+        "decap-cms-backend-gitea",
+        "decap-cms-backend-github",
+        "decap-cms-backend-gitlab",
+        "decap-cms-core",
+        "decap-cms-ui-auth"
+      ],
+      "range": "<=3.1.0 || >=3.3.1",
+      "nodes": [
+        "node_modules/decap-cms-lib-auth"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-media-library-uploadcare": {
+      "name": "decap-cms-media-library-uploadcare",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms"
+      ],
+      "range": ">=3.1.1",
+      "nodes": [
+        "node_modules/decap-cms-media-library-uploadcare"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-ui-auth": {
+      "name": "decap-cms-ui-auth",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-lib-auth"
+      ],
+      "effects": [
+        "decap-cms-backend-git-gateway"
+      ],
+      "range": ">=3.3.1",
+      "nodes": [
+        "node_modules/decap-cms-ui-auth"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-widget-code": {
+      "name": "decap-cms-widget-code",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [],
+      "range": ">=3.7.1",
+      "nodes": [
+        "node_modules/decap-cms-widget-code"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-widget-file": {
+      "name": "decap-cms-widget-file",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [
+        "decap-cms-widget-image"
+      ],
+      "range": "<=3.3.0 || >=3.5.1",
+      "nodes": [
+        "node_modules/decap-cms-widget-file"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-widget-image": {
+      "name": "decap-cms-widget-image",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "decap-cms-widget-file"
+      ],
+      "effects": [],
+      "range": "<=3.0.0 || >=3.4.1",
+      "nodes": [
+        "node_modules/decap-cms-widget-image"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-widget-list": {
+      "name": "decap-cms-widget-list",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [],
+      "range": ">=3.6.1",
+      "nodes": [
+        "node_modules/decap-cms-widget-list"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-widget-markdown": {
+      "name": "decap-cms-widget-markdown",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "remark-parse",
+        "remark-rehype"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/decap-cms-widget-markdown"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "decap-cms-widget-relation": {
+      "name": "decap-cms-widget-relation",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "uuid"
+      ],
+      "effects": [],
+      "range": "<=3.5.2 || >=3.7.1",
+      "nodes": [
+        "node_modules/decap-cms-widget-relation"
+      ],
+      "fixAvailable": true
+    },
+    "decap-cms-widget-richtext": {
+      "name": "decap-cms-widget-richtext",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "platejs",
+        "remark-parse",
+        "remark-rehype"
+      ],
+      "effects": [
+        "decap-cms-app"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/decap-cms-widget-richtext"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "mdast-util-to-hast": {
+      "name": "mdast-util-to-hast",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "trim"
+      ],
+      "effects": [
+        "remark-rehype"
+      ],
+      "range": "<=6.0.2",
+      "nodes": [
+        "node_modules/mdast-util-to-hast"
+      ],
+      "fixAvailable": true
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1244623,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=7.0.0 <11.0.1"
+        }
+      ],
+      "effects": [
+        "decap-cms-backend-bitbucket",
+        "decap-cms-backend-git-gateway"
+      ],
+      "range": "7.0.0 - 11.0.0",
+      "nodes": [
+        "node_modules/minimatch"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "platejs": {
+      "name": "platejs",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@platejs/core",
+        "@platejs/utils"
+      ],
+      "effects": [
+        "decap-cms-widget-richtext"
+      ],
+      "range": "49.0.0 - 52.3.21",
+      "nodes": [
+        "node_modules/platejs"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "remark-parse": {
+      "name": "remark-parse",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "trim"
+      ],
+      "effects": [
+        "decap-cms-widget-markdown"
+      ],
+      "range": "<=8.0.3",
+      "nodes": [
+        "node_modules/remark-parse"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "remark-rehype": {
+      "name": "remark-rehype",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "mdast-util-to-hast"
+      ],
+      "effects": [],
+      "range": "<=5.0.0",
+      "nodes": [
+        "node_modules/remark-rehype"
+      ],
+      "fixAvailable": true
+    },
+    "trim": {
+      "name": "trim",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1089867,
+          "name": "trim",
+          "dependency": "trim",
+          "title": "Regular Expression Denial of Service in trim",
+          "url": "https://github.com/advisories/GHSA-w5p7-h5w8-2hfq",
+          "severity": "high",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<0.0.3"
+        }
+      ],
+      "effects": [
+        "mdast-util-to-hast",
+        "remark-parse"
+      ],
+      "range": "<0.0.3",
+      "nodes": [
+        "node_modules/trim"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    },
+    "uuid": {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1119441,
+          "name": "uuid",
+          "dependency": "uuid",
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-787",
+            "CWE-1285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<11.1.1"
+        }
+      ],
+      "effects": [
+        "decap-cms-app",
+        "decap-cms-backend-test",
+        "decap-cms-core",
+        "decap-cms-lib-auth",
+        "decap-cms-media-library-uploadcare",
+        "decap-cms-widget-code",
+        "decap-cms-widget-file",
+        "decap-cms-widget-list",
+        "decap-cms-widget-relation"
+      ],
+      "range": "<11.1.1",
+      "nodes": [
+        "node_modules/uuid"
+      ],
+      "fixAvailable": {
+        "name": "decap-cms",
+        "version": "3.16.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 26,
+      "high": 7,
+      "critical": 0,
+      "total": 33
+    },
+    "dependencies": {
+      "prod": 1,
+      "dev": 585,
+      "optional": 1,
+      "peer": 50,
+      "peerOptional": 0,
+      "total": 585
+    }
+  }
+}

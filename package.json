@@ -1,0 +1,17 @@
+{
+  "name": "siqueira-miniaturas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mostruário Siqueira Miniaturas, com atendimento pelo WhatsApp",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "check": "node --check app.js && node --check catalog.js && node --check motion.js && node --check server.mjs && node --check catalog-data.js && node --check admin/admin.js && node --check api/auth.js && node --check api/callback.js",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "type": "module",
+  "devDependencies": {
+    "decap-cms": "3.17.3"
+  }
+}

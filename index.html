@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F2EC"><meta name="description" content="Grandes histórias cabem na sua coleção. Miniaturas e personalizados para quem vive o automobilismo. Siqueira Miniaturas.">
+  <title>Siqueira Miniaturas — Sua paixão em outra escala.</title>
+  <link rel="icon" type="image/svg+xml" href="assets/brand/favicon.svg"><link rel="icon" href="assets/brand/favicon.ico" sizes="any"><link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png"><link rel="manifest" href="assets/brand/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&family=Barlow+Condensed:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="motion.css"><link rel="stylesheet" href="hero-refinement.css"><link rel="stylesheet" href="showcase.css"><link rel="stylesheet" href="responsive.css"><script type="module" src="app.js"></script><script type="module" src="motion.js"></script>
+</head>
+<body>
+  <a class="skip" href="#colecao">Pular para o catálogo</a>
+  <header class="header"><a class="brand" href="#inicio" aria-label="Siqueira Miniaturas — início"><img src="assets/brand/logo-full.svg" alt="Siqueira Miniaturas" width="320" height="57"></a><nav aria-label="Navegação principal"><a href="#colecao"><sup>01</sup> Coleção</a><a href="#personalizados"><sup>02</sup> Personalizados</a><a href="#sobre"><sup>03</sup> Nossa paixão</a></nav><a class="header-contact contact-link" href="https://wa.me/5511987951099" target="_blank" rel="noopener noreferrer"><span data-icon="chat"></span> WhatsApp</a></header>
+  <main>
+    <section class="scroll-scene" id="inicio" aria-labelledby="hero-title">
+      <div class="hero-frame">
+        <div class="hero-title-left"><h1 id="hero-title">Sua paixão.<br><em>Em outra escala.</em></h1></div>
+        <div class="hero-intro-note"><p>Grandes histórias<br> cabem na sua coleção.</p></div>
+        <div class="race-media" role="img" aria-label="Monoposto perolado da Siqueira correndo na pista. A rolagem avança ou retorna a cena.">
+          <img class="race-poster" src="assets/race-sequence/frame-001.webp" alt="" fetchpriority="high" width="1280" height="720">
+          <canvas class="race-canvas" width="1280" height="720" aria-hidden="true"></canvas>
+        </div>
+        <div class="hero-detail-copy"><h2>Pequenos detalhes.<br>Uma paixão <em>gigante.</em></h2><p>A emoção de uma temporada inteira.<br>Um lugar especial na sua coleção.</p></div>
+        <div class="hero-bottom-left"><a href="#colecao" class="button button-dark">Explore a coleção</a><span class="hero-image-disclaimer">Imagem ilustrativa</span></div>
+        <a class="hero-feature" href="#personalizados"><strong>Seu estilo também entra no grid.</strong><span class="hero-feature-action">Conheça os personalizados</span></a>
+        <div class="scroll-indicator">A corrida acompanha seu scroll.</div>
+      </div>
+    </section>
+    <section class="showcase" id="colecao" aria-labelledby="collection-title">
+      <div class="showcase-heading"><div><p class="section-kicker">Para quem sente cada volta.</p><h2 id="collection-title">Paixão que se <em>coleciona.</em></h2></div><p>Da primeira peça<br> à próxima favorita.</p></div>
+      <div class="catalog-toolbar"><div class="filters" role="group" aria-label="Filtrar por categoria"><button class="filter active" data-category="all" aria-pressed="true">Todas as peças</button><button class="filter" data-category="miniaturas" aria-pressed="false">Miniaturas</button><button class="filter" data-category="roupas" aria-pressed="false">Roupas</button><button class="filter" data-category="personalizados" aria-pressed="false">Personalizados</button></div><label class="search"><span data-icon="search"></span><input type="search" id="search" placeholder="Buscar uma peça" aria-label="Buscar no catálogo"></label></div>
+      <div class="catalog-meta"><span id="results-count" aria-live="polite"></span><p>Mostruário ilustrativo. Fotos reais, valores e disponibilidade pelo WhatsApp.</p></div>
+      <div class="products" id="products"></div>
+      <div class="empty" id="empty" hidden><h3>Nenhuma peça por aqui.</h3><p>Tente outro termo ou explore todas as categorias.</p><button class="button button-dark" id="reset-search">Limpar filtros</button></div>
+      <div class="catalog-bottom"><button class="button button-outline" id="show-more">Ver mais peças</button><p>Procurando uma peça específica? <a class="contact-link" href="https://wa.me/5511987951099" target="_blank" rel="noopener noreferrer">Converse com a gente.</a></p></div>
+    </section>
+    <section class="passion-story" aria-labelledby="collector-title"><h2 id="collector-title">Não é só um carro.<br>É aquela <em>paixão.</em></h2><div><p>A emoção da largada. Uma ultrapassagem impossível. O piloto que fez você torcer pela primeira vez.</p><p class="story-close">É por isso que a gente coleciona.</p></div></section>
+    <section class="personal-studio" id="personalizados" aria-labelledby="custom-title"><figure><img src="assets/personalizados-editorial.png" alt="Conceitos de camiseta, pôster e caneca inspirados no automobilismo sobre uma bancada" loading="lazy"><figcaption>Conceitos ilustrativos de personalização.</figcaption></figure><div class="studio-copy"><p class="section-kicker">Além da estante.</p><h2 id="custom-title">O grid é o mesmo.<br>O estilo é <em>seu.</em></h2><p>A sua paixão não precisa ficar só na estante. Leve o universo das pistas para camisetas e peças personalizadas com a sua cara.</p><div class="studio-options"><span>Roupas</span><span>Estampas</span><span>Presentes</span></div><a class="custom-contact button button-dark" href="https://wa.me/5511987951099" target="_blank" rel="noopener noreferrer">Quero um personalizado</a><p class="studio-note">Conte sua ideia. A gente pensa nos detalhes com você.</p></div></section>
+    <section class="fan-contact" id="sobre" aria-labelledby="contact-title">
+      <div class="fan-intro"><p class="section-kicker">De fã para fã.</p><h2 id="contact-title">Sua próxima peça.<br><em>Uma boa conversa.</em></h2><p>Gostou de uma miniatura ou imaginou um personalizado? Fale com quem compartilha a mesma paixão.</p></div>
+      <div class="contact-invite"><p>Fotos, valores e todos os detalhes.<br>Direto com a Siqueira.</p><a class="contact-link button" href="https://wa.me/5511987951099" target="_blank" rel="noopener noreferrer"><span data-icon="chat"></span> Conversar pelo WhatsApp</a><p class="phone-label">(11) 98795-1099</p><span class="contact-caption">Você escolhe. A gente cuida dos detalhes.</span></div>
+    </section>
+  </main>
+  <footer class="brand-footer"><p class="footer-slogan">O automobilismo<br>mais perto <em>de você.</em></p><div class="footer-signoff"><a class="brand" href="#inicio"><img src="assets/brand/logo-full.svg" alt="Siqueira Miniaturas" width="320" height="57"></a><a href="#inicio" class="back-top">Voltar ao início</a></div><div class="footer-bottom"><span>© <span id="year">2026</span> Siqueira Miniaturas.</span><span>Mostruário independente. Sem vínculo oficial com a Fórmula 1 ou suas equipes.</span><span>Feito para apaixonados.</span></div></footer>
+  <dialog id="product-dialog" aria-labelledby="dialog-title"><button class="dialog-close" aria-label="Fechar detalhes">×</button><div id="dialog-content"></div></dialog>
+  <noscript><div class="noscript">Ative o JavaScript para explorar o catálogo ou <a href="https://wa.me/5511987951099">fale pelo WhatsApp: (11) 98795-1099</a>.</div></noscript>
+</body>
+</html>
+
+
