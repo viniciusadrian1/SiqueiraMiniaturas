@@ -8,10 +8,10 @@ for(const list of [data.products,data.categories]) {
 }
 const categories=new Set(data.categories.map(c=>c.id));
 for(const p of data.products)if(!categories.has(p.category))throw new Error(`Categoria inexistente: ${p.name}. Reassocie as peças antes de remover uma categoria.`);
-await mkdir('admin/vendor',{recursive:true});
-await cp('node_modules/decap-cms/dist/decap-cms.js','admin/vendor/decap-cms.js');
 await mkdir('dist',{recursive:true});
-for(const file of ['index.html','motion.css','hero-refinement.css','showcase.css','responsive.css','motion.js','app.js','catalog.js','catalog-data.js','assets','admin'])await cp(file,`dist/${file}`,{recursive:true});
+for(const file of ['index.html','motion.css','hero-refinement.css','showcase.css','responsive.css','motion.js','app.js','catalog.js','catalog-data.js','assets'])await cp(file,`dist/${file}`,{recursive:true});
+await mkdir('dist/admin',{recursive:true});
+for(const file of ['index.html','admin.css','admin.js','store.js','settings.js'])await cp(`admin/${file}`,`dist/admin/${file}`);
 await mkdir('dist/content',{recursive:true});
 await writeFile('dist/content/catalog.json',JSON.stringify(publicCatalog(data)));
 console.log('Site e painel preparados em dist. Produtos ocultos não entram no catálogo público.');

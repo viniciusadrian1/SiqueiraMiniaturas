@@ -1,59 +1,32 @@
 # Painel da Siqueira
 
-## O que já está implementado
-
-- `/admin/`: painel Decap CMS 3.17.3 em português, com ajustes para celular.
-- Produtos: nome, descrição, foto, categoria, preço opcional, selo e visibilidade.
-- Categorias: criar, ordenar e ocultar. Ocultar uma categoria oculta suas peças.
-- Os dados ficam em `content/catalog.json`; fotos enviadas ficam em `assets/uploads`.
-- O site lê esse catálogo. O build exclui peças e categorias ocultas da versão pública.
-- Login GitHub com OAuth, estado aleatório, PKCE, cookie HttpOnly e verificação da conta administradora e da permissão no repositório.
-- Sem Supabase, sem banco pago e sem checkout. Nenhum projeto empresarial foi alterado.
-
-## Situação atual
-
-Site publicado em https://siqueiraminiaturas.vercel.app, com branch `main` do repositório pessoal `viniciusadrian1/SiqueiraMiniaturas`. Os produtos demonstrativos foram removidos; as três categorias iniciais foram mantidas. O painel verifica `/api/admin-status` e libera o login quando as variáveis necessárias estão configuradas. A demonstração fica disponível somente em localhost.
-
-As cinco variáveis do login foram configuradas como segredos de produção no projeto pessoal da Vercel. O usuário confirmou a instalação do GitHub App somente no repositório da Siqueira. `/api/admin-status` retorna `configured: true`, `/api/auth` redireciona ao GitHub e o painel exibe “Entrar com o GitHub”. A entrada real da conta e o primeiro cadastro ainda aguardam validação pelo proprietário. O assistente `node scripts/setup-github-app.mjs` prepara o registro na conta pessoal e recebe as credenciais em `.env.github-app.json`, ignorado pelo Git. Instalar apenas em SiqueiraMiniaturas. Não compartilhar nem publicar esse arquivo.
-## Conectar para produção
-
-1. Usar o repositório `viniciusadrian1/SiqueiraMiniaturas`, atualmente público por escolha do proprietário. O login também suporta repositório privado. Instalar um GitHub App próprio apenas nesse repositório, usando “Only select repositories”. Permissões de repositório: **Contents: Read and write** e **Metadata: Read-only**. Nenhuma permissão de conta ou de organização. Não instalar nos projetos das empresas. A autorização usa permissões da instalação, sem os escopos amplos `repo` ou `public_repo`.
-2. Subir os arquivos do projeto, sem `node_modules`, `.env`, `dist` ou backups desnecessários. O `.gitignore` já exclui segredos e arquivos gerados.
-3. Confirmar `repo` e `branch` em `admin/settings.js`. O painel detecta a configuração do servidor automaticamente.
-4. Na hospedagem, configurar `npm run build` e pasta de saída `dist`. A Vercel tem `vercel.json` preparado e executa os endpoints em `api/`.
-5. Registrar um GitHub App na conta pessoal (não uma OAuth App) com homepage igual à URL definitiva do site e callback `https://SEU-DOMINIO/api/callback`. Configurar as variáveis de ambiente diretamente na hospedagem, nunca no chat nem no frontend:
-   - `SITE_ORIGIN`: origem HTTPS exata, sem barra final.
-   - `CMS_REPO`: o mesmo `usuario/repositorio` de `admin/settings.js`.
-   - `CMS_ADMIN_LOGIN`: usuário GitHub autorizado.
-   - `GITHUB_CLIENT_ID` e `GITHUB_CLIENT_SECRET`: do GitHub App. Não é necessário gerar uma chave privada para este fluxo de login de usuário.
-6. Manter a expiração dos tokens ativada. Este painel não faz renovação silenciosa: ao expirar, sair e entrar novamente pelo GitHub. Fazer novo deploy. Entrar em `/admin/`, autorizar o GitHub e testar uma peça inicialmente oculta. Publicar uma peça e conferir o novo deploy antes de divulgar.
-
-A Vercel Hobby restringe uso a projetos pessoais não comerciais. Este mostruário tem finalidade comercial; usar um plano adequado ou outra hospedagem compatível. A estrutura está preparada para Vercel, e já está publicado; nenhum plano foi contratado por esta configuração. Em outra hospedagem, o site estático é portátil; os dois endpoints OAuth precisam de adaptação para o runtime escolhido.
-
 ## Uso diário
 
-Entrar em **Catálogo → Produtos e categorias**. Adicionar a categoria antes de escolher a categoria de uma nova peça. Enviar JPG, PNG ou WebP até 5 MB, preferencialmente em torno de 1600 px. Usar um código único por peça e categoria. O preço é texto opcional; deixar vazio mantém consulta pelo WhatsApp.
+Acesse https://siqueiraminiaturas.vercel.app/admin/ e entre com a conta pessoal `viniciusadrian1` no GitHub. O painel próprio substitui o Decap, mantendo o mesmo aplicativo de login, repositório e catálogo. O token fica somente na memória da aba; ao recarregar ou encerrar a sessão, entre novamente.
 
-Ativar **Mostrar no site** e publicar. A alteração gera um commit no GitHub e dispara o build da hospedagem; só aparece no site após esse build terminar. Para tirar uma peça da vitrine, desativar sua visibilidade. Antes de remover uma categoria, reassociar os produtos; o build bloqueia referências inválidas para preservar a última publicação válida.
+- **Produtos:** veja fotos, preços e visibilidade. Busque uma peça ou filtre as ocultas.
+- **Adicionar produto:** escolha foto, nome e categoria. Preço, detalhes, descrição e selo são opcionais. O código é gerado automaticamente.
+- **Mostrar no site:** desative para guardar a peça sem exibi-la. Categorias ocultas também ocultam seus produtos.
+- **Salvar produto:** grava foto e catálogo juntos. O aviso diferencia “salvo” de “já está no site”, após a atualização da Vercel.
+- **Categorias:** área separada para criar, renomear e ocultar. Renomear preserva a associação com os produtos.
+- Fotos aceitas: JPG, PNG e WebP, até 5 MB. A prévia aparece antes de salvar.
 
-Não é necessário editar código para cadastrar produtos e categorias. O histórico do GitHub permite recuperar versões anteriores do conteúdo.
+## Arquitetura
 
-## Verificação e limites
+`content/catalog.json` guarda o catálogo; `assets/uploads` recebe fotos. A interface em `admin/` usa módulos JavaScript e CSS próprios, sem dependências externas de CMS. O GitHub App instalado somente no repositório `viniciusadrian1/SiqueiraMiniaturas` permite Contents write e Metadata read. Nenhum projeto empresarial ou Supabase é utilizado.
 
-`npm ci`, `npm run build`, `npm run check` e `npm test` preparam e validam a estrutura. `npm start` abre a prévia local em http://127.0.0.1:4173/. O servidor local não executa o OAuth de produção.
+`api/auth.js` e `api/callback.js` preservam PKCE, validação de estado, conta administradora e permissão de escrita. O popup entrega o token apenas à mesma origem e janela que iniciou o login. As variáveis `SITE_ORIGIN`, `CMS_REPO`, `CMS_ADMIN_LOGIN`, `GITHUB_CLIENT_ID` e `GITHUB_CLIENT_SECRET` continuam na Vercel pessoal.
 
-Os testes de OAuth usam respostas simuladas e cobrem estado inválido, conta não autorizada e entrega restrita do token. Login, upload e publicação reais precisam ser validados depois de conectar a conta e hospedagem. Nenhuma credencial foi criada ou usada nesta etapa.
+`admin/store.js` lê o catálogo em um commit específico. Antes de salvar, compara seu SHA com a versão atual. Se outra aba alterou o catálogo, bloqueia a gravação. Usa a árvore atual como base, cria um único commit com imagem e catálogo e atualiza a referência com `force:false`. Uma alteração concorrente nunca causa sobrescrita forçada. Falhas mantêm o formulário preenchido.
 
-O pacote oficial do Decap traz alertas transitivos no npm audit, inclusive ReDoS em `trim` via os editores Markdown não utilizados nesta configuração. A versão está fixada; não executar `npm audit fix --force` automaticamente, pois sugere downgrade. O painel usa o bundle oficial pré-compilado: alterar dependências transitivas isoladas não corrige esse bundle. Reavaliar uma versão corrigida antes da ativação pública. O relatório está em `docs/dependency-audit.json`.
+O build filtra produtos e categorias ocultos. O repositório é público por decisão do proprietário: ocultar no mostruário não torna o conteúdo privado no GitHub.
 
-Referências: [Decap GitHub](https://decapcms.org/docs/github-backend/), [OAuth GitHub](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps), [Vercel Hobby](https://vercel.com/docs/plans/hobby).
+## Desenvolvimento e verificação
 
-## Validação visual desta revisão
+`npm run check`, `npm test` e `npm run build`. `npm start` abre http://127.0.0.1:4173. Para verificar a interface sem gravar remotamente, use `/admin/?preview` apenas em localhost. Esse modo trabalha em memória e mostra um aviso permanente.
 
-Site inspecionado em 320, 390 e 768 px: sem overflow horizontal; filtros, busca sem resultados e diálogo testados. A sequência do carro avançou ao rolar. Painel abriu em português, carregou 8 peças/3 categorias demonstrativas e abriu novo produto; largura fixa de 800 px corrigida para 390 px. Uma revisão posterior do editor travou a prévia do navegador, portanto sua validação mobile completa ainda está pendente.
+Testes cobrem autenticação, publicação conjunta de foto e catálogo, preservação da árvore de arquivos, conflitos entre edições, categorias e conteúdo oculto. A prévia visual cobre a edição de produto e criação de categoria. O usuário confirmou login e cadastro no painel anterior; a nova interface precisa de confirmação do primeiro salvamento real após a publicação.
 
-### Acesso do Codex e acesso do painel
+## Mobile
 
-São conexões distintas. O acesso de desenvolvimento foi resolvido pelo `gh` autenticado localmente na conta pessoal `viniciusadrian1`. Para o dono administrar produtos depois, configurar o GitHub App do painel como descrito acima. Nunca tornar o repositório público para contornar um erro 404.
-
-O fluxo de GitHub App foi ajustado e testado localmente, mas a compatibilidade de login/publicação real com o backend Decap ainda precisa de teste integrado após a instalação. [Documentação do fluxo GitHub App](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app).
+A capa usa uma cena vertical de altura de tela, com enquadramento do carro, gradientes de contraste e textos sobre a imagem. A sequência continua ligada à rolagem. Desktop mantém sua composição. Reduced motion mantém a imagem estática.

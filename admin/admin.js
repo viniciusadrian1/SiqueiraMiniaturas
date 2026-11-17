@@ -1,45 +1,114 @@
-import {adminSettings} from './settings.js';
-const string = (name,label,extra={}) => ({name,label,widget:'string',...extra});
-const fields = [
- {name:'categories',label:'Categorias',widget:'list',summary:'{{fields.name}}',fields:[
-  string('id','Identificador',{hint:'Sem espaços ou acentos. Exemplo: capacetes. Não altere após associar produtos.',pattern:['^[a-z0-9-]+$','Use letras minúsculas, números e hífens.']}),
-  string('name','Nome da categoria'),{name:'visible',label:'Mostrar no site',widget:'boolean',default:true,hint:'Ao ocultar uma categoria, suas peças também ficam ocultas.'}
- ]},
- {name:'products',label:'Produtos',widget:'list',required:false,summary:'{{fields.name}}',fields:[
-  string('id','Código da peça',{hint:'Único, sem espaços. Exemplo: ferrari-2024-01',pattern:['^[a-z0-9-]+$','Use letras minúsculas, números e hífens.']}),
-  string('name','Nome da peça'),
-  {name:'category',label:'Categoria',widget:'relation',collection:'catalog',file:'items',search_fields:['categories.*.name'],display_fields:['categories.*.name'],value_field:'categories.*.id'},
-  {name:'image',label:'Foto do produto',widget:'image',choose_url:false,media_library:{config:{max_file_size:5000000}},hint:'JPG, PNG ou WebP, até 5 MB. Prefira fotos com cerca de 1600 pixels.'},
-  string('subtitle','Detalhes rápidos',{hint:'Exemplo: Escala 1:43 · Temporada 2024',required:false}),
-  {name:'detail',label:'Descrição',widget:'text',required:false},
-  string('price','Preço exibido',{required:false,hint:'Opcional. Exemplo: R$ 199,90. Deixe vazio para consultar pelo WhatsApp.'}),
-  string('tag','Selo da peça',{required:false,hint:'Exemplo: Novidade'}),
-  string('label','Tipo exibido',{required:false,hint:'Exemplo: MINIATURA'}),
-  {name:'published',label:'Mostrar no site',widget:'boolean',default:false},
-  {name:'illustrative',label:'Imagem ilustrativa',widget:'boolean',default:false}
- ]}
-];
-async function start(demo=false) {
- const button=document.querySelector('#open-demo'); button.disabled=true;
- window.CMS_MANUAL_INIT=true;
- try {
-  if(demo){const response=await fetch('/content/catalog.json');if(!response.ok)throw new Error('Demo unavailable');window.repoFiles={content:{'catalog.json':{path:'content/catalog.json',content:await response.text()}}};}
-  await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/admin/vendor/decap-cms.js';script.onload=resolve;script.onerror=reject;document.head.append(script);});
-  window.CMS.init({config:{load_config_file:false,backend:demo?{name:'test-repo'}:{name:'github',repo:adminSettings.repo,branch:adminSettings.branch,base_url:location.origin,auth_endpoint:'api/auth'},locale:'pt',logo_url:location.origin+'/assets/brand/logo-full.svg',display_url:location.origin,media_folder:'assets/uploads',public_folder:'/assets/uploads',publish_mode:'simple',show_preview_links:false,editor:{preview:false},collections:[{name:'catalog',label:'Catálogo',delete:false,files:[{name:'items',label:'Produtos e categorias',file:'content/catalog.json',format:'json',fields}]}]}});
-  document.querySelector('#setup').hidden=true;
-  document.querySelector('#demo-banner').hidden=!demo;
- } catch {
-  document.querySelector('#status').textContent='O painel não carregou. Execute npm run build para preparar os arquivos e tente novamente.';
-  button.disabled=false;
- }
+import {CatalogStore,newId} from './store.js';
+import {escapeHTML as esc,imageURL,publicCatalog} from '../catalog-data.js';
+const $=selector=>document.querySelector(selector),form=$('#product-form');
+const preview=['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
+let store,data={categories:[],products:[]},view='products',editing=null,editingCategory=null,photo=null,dirty=false,busy=false,photoLoading=false,popup=null,poll=0;
+const localPhotos=new Map();
+const price=value=>value?(String(value).startsWith('R$')?value:`R$ ${value}`):'Preço sob consulta';
+function notice(message,error=false){$('#notice').hidden=false;$('#notice').textContent=message;$('#notice').classList.toggle('error',error);}
+function image(path){return localPhotos.get(path)||('/'+imageURL(path).replace(/^\//,''));}
+function showWorkspace(){ $('#login').hidden=true;$('#workspace').hidden=false;$('#preview-notice').hidden=!preview;render(); }
+function render(){
+ const products=view==='products',query=$('#search').value.toLocaleLowerCase('pt-BR'),filter=$('#visibility').value;
+ $('#nav-count').textContent=data.products.length;
+ document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===view));
+ $('#page-title').innerHTML=products?'Seus produtos<span>.</span>':'Suas categorias<span>.</span>';
+ $('#page-description').textContent=products?'Cuide de cada peça que aparece no seu mostruário.':'Organize suas peças para facilitar a descoberta.';
+ $('#add-item').textContent=products?'+ Adicionar produto':'+ Adicionar categoria';
+ $('#search').placeholder=products?'Nome do produto…':'Nome da categoria…';$('#visibility').hidden=!products;
+ const visible=p=>p.published!==false&&data.categories.find(c=>c.id===p.category)?.visible!==false;
+ const list=data[view].filter(p=>p.name.toLocaleLowerCase('pt-BR').includes(query)&&(!products||filter==='all'||visible(p)===(filter==='visible')));
+ $('#items').innerHTML=list.map(p=>products?`<article class="product"><img class="product-image" src="${esc(image(p.image))}" alt="${esc(p.name)}"><div class="product-body"><div class="product-meta"><span>${esc(data.categories.find(c=>c.id===p.category)?.name)}</span><span class="badge ${visible(p)?'':'off'}">${visible(p)?'No mostruário':'Oculto'}</span></div><h2>${esc(p.name)}</h2><p class="price">${esc(price(p.price))}</p><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar produto</button><button class="quiet" data-toggle="${esc(p.id)}">${p.published===false?'Mostrar':'Ocultar'}</button></div></div></article>`:`<article class="category-card"><div><h2>${esc(p.name)}</h2><p>${data.products.filter(x=>x.category===p.id).length} produto(s) · ${p.visible===false?'Oculta':'Visível no site'}</p></div><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Adicione um novo item ou ajuste sua busca.</p></div>';
 }
-document.querySelector('#open-demo').addEventListener('click',()=>start(true));
-async function initialize(){
- let ready=false;
- try {const response=await fetch('/api/admin-status',{cache:'no-store'});if(response.ok)ready=(await response.json()).configured===true;}
- catch { /* Keep the setup notice if the status endpoint is unavailable. */ }
- if(ready && /^[\w.-]+\/[\w.-]+$/.test(adminSettings.repo)){await start();return;}
- document.querySelector('#status').textContent='O acesso administrativo está sendo configurado. Assim que a conexão com o GitHub estiver pronta, você poderá entrar aqui para cadastrar suas peças e enviar fotos.';
- document.querySelector('#open-demo').hidden=!['localhost','127.0.0.1'].includes(location.hostname);
+function leave(){if(busy||photoLoading)return false;return !dirty||confirm('Você tem alterações não salvas. Deseja descartá-las?');}
+function list(){dirty=false;photo=null;$('#editor').hidden=true;$('#listing').hidden=false;render();window.scrollTo({top:0,behavior:'instant'});}
+function openProduct(id){
+ editing=data.products.find(p=>p.id===id)||null;photo=null;dirty=false;form.reset();
+ $('#notice').hidden=true;$('#editor-title').innerHTML=editing?'Editar produto<span>.</span>':'Novo produto<span>.</span>';
+ form.elements.category.innerHTML='<option value="">Escolha uma categoria</option>'+data.categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.visible===false?' (oculta)':''}</option>`).join('');
+ for(const key of ['name','price','subtitle','detail','tag','category'])form.elements[key].value=editing?.[key]||'';
+ form.elements.published.checked=editing?editing.published!==false:true;form.elements.illustrative.checked=editing?.illustrative===true;
+ $('#photo-preview').hidden=!editing?.image;$('#photo-placeholder').hidden=!!editing?.image;if(editing?.image)$('#photo-preview').src=image(editing.image);
+ $('#save-hint').textContent='As alterações vão para o site depois de salvar.';
+ $('#listing').hidden=true;$('#editor').hidden=false;updatePreview();window.scrollTo({top:0,behavior:'instant'});
 }
-initialize();
+function updatePreview(){$('#preview-name').textContent=form.elements.name.value||'O nome da sua peça';$('#preview-price').textContent=price(form.elements.price.value);}
+function openCategory(id){editingCategory=data.categories.find(c=>c.id===id)||null;const f=$('#category-form');f.reset();f.elements.name.value=editingCategory?.name||'';f.elements.visible.checked=editingCategory?.visible!==false;$('#category-title').textContent=editingCategory?'Editar categoria':'Nova categoria';$('#category-error').textContent='';$('#category-dialog').showModal();}
+function saving(value){busy=value;document.querySelectorAll('#workspace button, #category-dialog button, #category-dialog input, #product-form input, #product-form select, #product-form textarea').forEach(b=>b.disabled=value);$('#save').textContent=value?'Salvando…':'Salvar produto';}
+async function persist(next,newPhoto){
+ if(preview){data=structuredClone(next);return;}
+ await store.save(next,newPhoto);data=next;
+}
+function monitorPublication(){
+ const expected=JSON.stringify(publicCatalog(data)),version=++poll;
+ notice(preview?'Salvo nesta prévia local. Nenhuma alteração foi publicada.':'Salvo! Estamos atualizando seu site. Você já pode continuar cadastrando.');
+ if(preview)return;
+ const start=Date.now();
+ async function check(){
+  if(version!==poll)return;
+  try{const r=await fetch('/content/catalog.json?t='+Date.now(),{cache:'no-store'});if(r.ok&&JSON.stringify(await r.json())===expected){notice('Tudo certo! Suas alterações já estão no site.');return;}}catch{}
+  if(Date.now()-start<180000)setTimeout(check,7000);else notice('Seu catálogo foi salvo. A atualização do site está demorando mais que o normal; confira em “Ver meu site”.');
+ }setTimeout(check,5000);
+}
+form.addEventListener('input',()=>{dirty=true;updatePreview();$('#save-hint').textContent='Você tem alterações para salvar.';});
+$('#photo').addEventListener('change',async event=>{
+ const file=event.target.files[0];if(!file||photoLoading)return;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5000000){notice('Escolha uma foto JPG, PNG ou WebP de até 5 MB.',true);event.target.value='';return;}
+ photoLoading=true;$('#save').disabled=true;$('#save-hint').textContent='Preparando sua foto…';
+ try{
+  const bitmap=await createImageBitmap(file);bitmap.close();
+  const url=URL.createObjectURL(file),extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+  const content=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
+  photo={path:`assets/uploads/${newId('produto')}.${extension}`,base64:content.split(',')[1],url};
+  $('#photo-preview').src=url;$('#photo-preview').hidden=false;$('#photo-placeholder').hidden=true;dirty=true;
+ }catch{notice('Não conseguimos abrir essa imagem. Escolha outra foto.',true);}
+ finally{photoLoading=false;$('#save').disabled=false;$('#save-hint').textContent='Você tem alterações para salvar.';}
+});
+form.addEventListener('submit',async event=>{
+ event.preventDefault();if(busy||photoLoading)return;
+ if(!photo&&!editing?.image){notice('Escolha uma foto para o produto.',true);$('#photo').focus();return;}
+ const fields=new FormData(form),product={...editing,id:editing?.id||newId(fields.get('name')),image:photo?'/'+photo.path:editing.image};
+ for(const key of ['name','price','subtitle','detail','tag','category'])product[key]=String(fields.get(key)||'').trim();
+ product.published=form.elements.published.checked;product.illustrative=form.elements.illustrative.checked;
+ product.label=data.categories.find(c=>c.id===product.category)?.name.toLocaleUpperCase('pt-BR')||'';
+ if(photo)delete product.imagePosition;
+ const next=structuredClone(data),index=next.products.findIndex(p=>p.id===product.id);if(index<0)next.products.unshift(product);else next.products[index]=product;
+ saving(true);
+ try{await persist(next,photo);if(photo)localPhotos.set(product.image,photo.url);dirty=false;saving(false);list();monitorPublication();}
+ catch(error){notice(error.message,true);$('#save-hint').textContent=error.message;}
+ finally{saving(false);}
+});
+$('#category-form').addEventListener('submit',async event=>{
+ event.preventDefault();if(busy)return;const f=event.target,name=f.elements.name.value.trim();
+ if(!name){$('#category-error').textContent='Preencha o nome da categoria.';return;}
+ if(data.categories.some(c=>c.id!==editingCategory?.id&&c.name.toLocaleLowerCase()===name.toLocaleLowerCase())){$('#category-error').textContent='Essa categoria já existe.';return;}
+ const next=structuredClone(data),category={...editingCategory,id:editingCategory?.id||newId(name),name,visible:f.elements.visible.checked},index=next.categories.findIndex(c=>c.id===category.id);
+ if(index<0)next.categories.push(category);else next.categories[index]=category;
+ saving(true);try{await persist(next);$('#category-dialog').close();render();monitorPublication();}catch(error){$('#category-error').textContent=error.message;}finally{saving(false);}
+});
+$('#items').addEventListener('click',async event=>{
+ const edit=event.target.closest('[data-edit]'),toggle=event.target.closest('[data-toggle]');
+ if(busy)return;if(edit){view==='products'?openProduct(edit.dataset.edit):openCategory(edit.dataset.edit);return;}
+ if(toggle){const next=structuredClone(data),p=next.products.find(p=>p.id===toggle.dataset.toggle);p.published=p.published===false;saving(true);try{await persist(next);render();monitorPublication();}catch(error){notice(error.message,true);}finally{saving(false);}}
+});
+$('#add-item').onclick=()=>view==='products'?openProduct():openCategory();
+$('#close-category').onclick=()=>$('#category-dialog').close();
+$('#category-dialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
+for(const id of ['back','cancel'])$('#'+id).onclick=()=>{if(leave())list();};
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{if(!leave())return;view=b.dataset.view;$('#search').value='';list();});
+$('#search').oninput=render;$('#visibility').onchange=render;
+$('#reload').onclick=async()=>{if(busy)return;saving(true);try{data=preview?await (await fetch('/content/catalog.json')).json():await store.load();render();notice('Lista atualizada.');}catch(error){notice(error.message,true);}finally{saving(false);}};
+$('#sign-out').onclick=()=>{if(!leave())return;store=null;data={products:[],categories:[]};dirty=false;poll++;$('#workspace').hidden=true;$('#login').hidden=false;$('#login-status').textContent='Você saiu da sua conta.';};
+window.addEventListener('beforeunload',event=>{if(dirty||busy){event.preventDefault();event.returnValue='';}});
+$('#sign-in').onclick=()=>{
+ popup=window.open('/api/auth','siqueira-login','width=640,height=760');
+ $('#login-status').textContent=popup?'Conclua a entrada na janela do GitHub.':'Permita a janela de login no seu navegador e tente novamente.';
+};
+window.addEventListener('message',async event=>{
+ if(event.origin!==location.origin||event.source!==popup||typeof event.data!=='string')return;
+ if(event.data==='authorizing:github'){popup.postMessage('authorizing:github',location.origin);return;}
+ const prefix='authorization:github:success:';if(!event.data.startsWith(prefix))return;
+ try{const auth=JSON.parse(event.data.slice(prefix.length));if(typeof auth.token!=='string'||!auth.token)throw new Error('Login inválido.');store=new CatalogStore(auth.token);$('#login-status').textContent='Carregando suas peças…';data=await store.load();popup=null;showWorkspace();}
+ catch(error){$('#login-status').textContent=error.message;}
+});
+if(preview){data=await (await fetch('/content/catalog.json')).json();showWorkspace();}

@@ -72,9 +72,9 @@ function renderScroll(now = performance.now()) {
   targetFrame = Math.round(smoothFrame);
   scene.style.setProperty('--progress', progress.toFixed(4));
   const compact = window.matchMedia('(max-width: 760px)').matches;
-  // Keep the copy present in the mobile layout while the car moves below it.
-  scene.style.setProperty('--intro-opacity', compact ? String(progress < .45 ? 1 : 0) : Math.max(0, 1 - progress * 3).toFixed(4));
-  scene.style.setProperty('--detail-opacity', compact ? String(progress < .45 ? 0 : 1) : Math.min(1, Math.max(0, (progress - .45) / .25)).toFixed(4));
+  // Both copy layers share the scene; a short crossfade follows the car.
+  scene.style.setProperty('--intro-opacity', compact ? Math.max(0,Math.min(1,(.46-progress)/.12)).toFixed(4) : Math.max(0, 1 - progress * 3).toFixed(4));
+  scene.style.setProperty('--detail-opacity', compact ? Math.max(0,Math.min(1,(progress-.46)/.12)).toFixed(4) : Math.min(1, Math.max(0, (progress - .45) / .25)).toFixed(4));
   if (reducedMotion.matches) {
     smoothFrame = 0;
     canvas?.classList.remove('ready');

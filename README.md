@@ -1,6 +1,6 @@
 # Siqueira Miniaturas
 
-Mostruário responsivo de automobilismo com atendimento pelo WhatsApp **(11) 98795-1099**. Sem carrinho, checkout ou gateway. Painel Decap CMS com catálogo em arquivos e login GitHub preparado; sem Supabase.
+Mostruário responsivo de automobilismo com atendimento pelo WhatsApp **(11) 98795-1099**. Sem carrinho, checkout ou gateway. Painel próprio com edição individual, catálogo em arquivos e login GitHub; sem Supabase.
 
 ## Abrir localmente
 

@@ -86,3 +86,27 @@
  .scroll-scene{height:auto;min-height:0}.hero-frame{position:relative;height:640px;min-height:0;max-height:none}
 }
 @media(prefers-reduced-motion:reduce){.scroll-scene{height:auto;min-height:0}.hero-frame{position:relative}}
+/* Mobile: copy and motion live in the same portrait scene. */
+@media(max-width:760px){
+ .scroll-scene{height:230svh;min-height:1250px}
+ .hero-frame{height:100svh;min-height:650px;max-height:920px;isolation:isolate;background:#d4dfe0}
+ .race-media{inset:0;aspect-ratio:auto;border-radius:0;background:#d4dfe0;overflow:hidden;z-index:0}
+ .race-poster,.race-canvas{width:100%;height:100%;object-fit:cover;object-position:51% center}
+ .race-media:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#f3f2eceb 0%,#f3f2ecb0 20%,transparent 43%,transparent 65%,#11191f75 85%,#11191fc9 100%);pointer-events:none}
+ .hero-title-left{top:6%;left:24px;right:20px;z-index:2}
+ .hero-title-left h1{font-size:clamp(45px,12.5vw,68px);line-height:.98}
+ .hero-intro-note{top:calc(6% + 27vw);left:24px;right:24px;z-index:2}
+ .hero-intro-note p{font:500 20px/1.3 'Barlow Condensed',sans-serif;max-width:240px;margin:0}
+ .hero-detail-copy{top:6%;left:24px;right:20px;z-index:2}
+ .hero-detail-copy h2{font-size:clamp(40px,11.4vw,61px);line-height:1.02}
+ .hero-detail-copy p{font-size:14px;line-height:1.5;margin-top:16px}
+ .hero-bottom-left{bottom:18%;left:24px;right:24px;z-index:2;align-items:center}
+ .hero-bottom-left .button{background:var(--paper);color:#151719;font-weight:600}
+ .hero-image-disclaimer{color:#fff;opacity:.8;font-size:9px}
+ .hero-feature{bottom:7%;left:24px;right:24px;z-index:2}
+ .hero-feature strong,.hero-feature span.hero-feature-action{color:#fff}
+ .hero-feature strong{font-size:17px}.hero-feature span.hero-feature-action{font-size:13px;margin-top:4px}
+ .scroll-indicator{bottom:2.5%;left:24px;color:#f4f3ec;z-index:2;font-size:9px}
+}
+@media(max-width:360px){.hero-frame{min-height:630px}.hero-title-left h1{font-size:43px}.hero-detail-copy h2{font-size:37px}.hero-intro-note{top:calc(6% + 96px)}.hero-bottom-left{left:20px;right:20px}.hero-bottom-left .button{padding-inline:14px}}
+@media(max-height:600px) and (max-width:950px) and (orientation:landscape){.hero-frame{height:680px;max-height:none}.race-media{inset:0}}
