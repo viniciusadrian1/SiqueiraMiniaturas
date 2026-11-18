@@ -45,7 +45,33 @@
       "isPrint": true,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "ROUPAS",
+      "imageFrames": {
+        "/assets/uploads/produto-0600aa34.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.68,
+            "x": 0,
+            "y": 26.648504392305114
+          }
+        },
+        "/assets/uploads/produto-3e10b50c.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.26,
+            "x": 100,
+            "y": 0
+          }
+        },
+        "/assets/uploads/produto-b53ad2b5.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1,
+            "x": 50,
+            "y": 50
+          }
+        }
+      }
     },
     {
       "id": "miniatura-rb22-max-verstappen-bburago-ee5bf4b3",
