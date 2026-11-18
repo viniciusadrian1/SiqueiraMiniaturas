@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-lando-norris-the-eras-tour-b61f78d5",
+      "image": "/assets/uploads/produto-8901895f.png",
+      "images": [
+        "/assets/uploads/produto-8901895f.png",
+        "/assets/uploads/produto-dd8107f9.png",
+        "/assets/uploads/produto-1b9e34a8.png",
+        "/assets/uploads/produto-e2dbcebb.png"
+      ],
+      "name": "Camiseta Lando Norris The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Lando Norris",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-8901895f.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.68,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-dd8107f9.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.34,
+            "x": 30.3,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-max-verstappen-the-eras-tour-ae90c4d8",
       "image": "/assets/uploads/produto-0600aa34.png",
       "images": [
