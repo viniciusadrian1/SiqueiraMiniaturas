@@ -37,9 +37,10 @@ export function mercadoLivreURL(value){
 }
 export function validateMercadoLivre(value){if(value!==undefined&&value!==null&&value!==''&&(typeof value!=='string'||(value.trim()&&!mercadoLivreURL(value))))throw new Error('Use o link HTTPS completo do anúncio em mercadolivre.com.br.');}
 export const normalizeSearch=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').replace(/(\d)\s*[:/]\s*(\d)/g,'$1:$2');
-export function filterProducts(products,{query='',category='all',availability='all',driver='',team='',scale=''}={}){
+export function filterProducts(products,{query='',category='all',availability='all',driver='',team='',scale='',collection=''}={}){
  const terms=normalizeSearch(query).trim().split(/\s+/).filter(Boolean);
- return products.filter(p=>(category==='all'||p.category===category)&&(availability==='all'||(p.availability?.status||'consult')===availability)&&['driver','team','scale'].every(key=>!({driver,team,scale})[key]||normalizeSearch(p[key])===normalizeSearch(({driver,team,scale})[key]))&&terms.every(term=>normalizeSearch([p.name,p.subtitle,p.detail,p.driver,p.team,p.scale,p.category].join(' ')).includes(term)));
+ const filters={driver,team,scale,collection};
+ return products.filter(p=>(category==='all'||p.category===category)&&(availability==='all'||(p.availability?.status||'consult')===availability)&&Object.keys(filters).every(key=>!filters[key]||normalizeSearch(p[key]).trim()===normalizeSearch(filters[key]).trim())&&terms.every(term=>normalizeSearch([p.name,p.subtitle,p.detail,p.driver,p.team,p.scale,p.collection,p.category].join(' ')).includes(term)));
 }
 export function relatedProducts(product,products,limit=3){
  const same=(a,b)=>a&&b&&normalizeSearch(a)===normalizeSearch(b);

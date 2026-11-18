@@ -1,4 +1,5 @@
 import {validateAvailability,validateMercadoLivre} from '../product-data.js';
+import {validateCatalogFields} from '../catalog-sections.js';
 import {adminSettings} from './settings.js';
 export class CatalogStore {
  constructor(token,request=(...args)=>globalThis.fetch(...args)){this.token=token;this.request=request;this.base=`https://api.github.com/repos/${adminSettings.repo}`;}
@@ -32,6 +33,7 @@ export class CatalogStore {
  }
 }
 export function validateCatalog(data){
+ validateCatalogFields(data);
  for(const list of [data.categories,data.products]){
   if(!Array.isArray(list))throw new Error('Catálogo inválido.');
   const ids=new Set();for(const item of list){if(!/^[a-z0-9-]+$/.test(item.id)||ids.has(item.id)||!item.name?.trim())throw new Error('Preencha o nome e confira os itens duplicados.');ids.add(item.id);}

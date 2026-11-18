@@ -3,17 +3,20 @@
     {
       "id": "miniaturas",
       "name": "Miniaturas",
-      "visible": true
+      "visible": true,
+      "section": "miniaturas"
     },
     {
       "id": "roupas",
-      "name": "Roupas",
-      "visible": true
+      "name": "Vestuário",
+      "visible": true,
+      "section": "vestuario"
     },
     {
       "id": "personalizados",
       "name": "Personalizados",
-      "visible": true
+      "visible": true,
+      "section": "personalizados"
     }
   ],
   "products": [
@@ -63,7 +66,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-fernando-alonso-the-eras-tour-cb4cc26d",
@@ -111,7 +115,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-oscar-piastri-the-eras-tour-43f84527",
@@ -159,7 +164,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-kimi-antonelli-the-eras-tour-34b12e2b",
@@ -207,7 +213,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-charles-leclerc-the-eras-tour-ccf35a3c",
@@ -255,7 +262,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-franco-colapinto-the-eras-tour-a1f1ddee",
@@ -303,7 +311,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-george-russell-the-eras-tour-9fae8bda",
@@ -351,7 +360,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-lando-norris-the-eras-tour-b61f78d5",
@@ -399,7 +409,8 @@
       "isPrint": false,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS"
+      "label": "VESTUÁRIO",
+      "collection": "The Eras Tour"
     },
     {
       "id": "camiseta-max-verstappen-the-eras-tour-ae90c4d8",
@@ -429,7 +440,7 @@
       "isPrint": true,
       "published": true,
       "illustrative": false,
-      "label": "ROUPAS",
+      "label": "VESTUÁRIO",
       "imageFrames": {
         "/assets/uploads/produto-0600aa34.png": {
           "catalog": {
@@ -455,7 +466,8 @@
             "y": 50
           }
         }
-      }
+      },
+      "collection": "The Eras Tour"
     },
     {
       "id": "miniatura-rb22-max-verstappen-bburago-ee5bf4b3",

@@ -19,6 +19,30 @@
     {
       "source": "/produto/:id",
       "destination": "/produto/:id/index.html"
+    },
+    {
+      "source": "/miniaturas/",
+      "destination": "/miniaturas/index.html"
+    },
+    {
+      "source": "/miniaturas",
+      "destination": "/miniaturas/index.html"
+    },
+    {
+      "source": "/vestuario/",
+      "destination": "/vestuario/index.html"
+    },
+    {
+      "source": "/vestuario",
+      "destination": "/vestuario/index.html"
+    },
+    {
+      "source": "/personalizados/",
+      "destination": "/personalizados/index.html"
+    },
+    {
+      "source": "/personalizados",
+      "destination": "/personalizados/index.html"
     }
   ],
   "headers": [
@@ -47,6 +71,18 @@
           "value": "public, max-age=0, must-revalidate"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/roupas",
+      "destination": "/vestuario/",
+      "permanent": true
+    },
+    {
+      "source": "/roupas/",
+      "destination": "/vestuario/",
+      "permanent": true
     }
   ]
 }

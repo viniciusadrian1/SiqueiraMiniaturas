@@ -15,3 +15,5 @@
 
 /* Match the public photo surface, including transparent and unedited photos. */
 .frame-stage,.photo-preview-frame,.admin-product-image,.admin-product-image .product-image{background:#eae9e3}
+
+.card-collection{font-size:12px;color:#62685d;margin:8px 0}
