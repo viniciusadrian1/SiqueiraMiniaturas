@@ -112,7 +112,7 @@ function monitorPublication(){
 form.addEventListener('input',()=>{dirty=true;updatePreview();$('#save-hint').textContent='Você tem alterações para salvar.';});
 function renderPhotos(){
  $('#photo-preview-frame').hidden=!photos.length;$('#photo-preview').hidden=!photos.length;$('#photo-placeholder').hidden=!!photos.length;
- if(photos.length){$('#photo-preview').src=photos[0].url||image(photos[0].path);$('#photo-preview').style.cssText=photos[0].frames?.catalog?frameStyle(photos[0].frames.catalog):'';}
+ if(photos.length){$('#photo-preview').src=photos[0].url||image(photos[0].path);$('#photo-preview').style.cssText=frameStyle(photos[0].frames?.catalog);}
  $('#photo-list').innerHTML=photos.map((p,i)=>`<div class="photo-item" data-photo-index="${i}"><button type="button" class="photo-drag-handle" data-sort-photo aria-label="Mover foto ${i+1}. Arraste ou use as setas do teclado." aria-pressed="false">⠿ <span>Arrastar</span></button><img src="${esc(p.url||image(p.path))}" alt="Foto ${i+1}"><span>${i===0?'Capa':'Foto '+(i+1)}</span><button type="button" data-frame="${i}">Enquadrar foto</button><button type="button" data-cover="${i}" ${i===0?'disabled':''}>Usar como capa</button><button type="button" data-remove="${i}" aria-label="Remover foto ${i+1}">Remover</button></div>`).join('');
 }
 photoSort($('#photo-list'),{canMove:()=>!busy&&!photoLoading,onMove:(from,to)=>{

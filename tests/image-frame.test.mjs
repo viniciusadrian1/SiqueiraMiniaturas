@@ -17,7 +17,15 @@ test('frames follow the image path after reordering and differ by context',()=>{
  const p={image:'/assets/a.jpg',imageFrames:{'/assets/a.jpg':{catalog:{fit:'cover',zoom:2,x:30,y:40},gallery:{fit:'contain',zoom:1,x:50,y:50}}}};
  assert.match(savedFrameStyle(p,'assets/a.jpg','catalog'),/scale\(2\)/);
  assert.match(savedFrameStyle(p,p.image,'gallery'),/scale\(1\)/);
- assert.equal(savedFrameStyle(p,'/assets/b.jpg','catalog'),'');
+ assert.equal(savedFrameStyle(p,'/assets/b.jpg','catalog'),frameStyle());
  const html=renderProductPage({...p,id:'a',name:'A',category:'c'},[]);
  assert.match(html,/class="framed-image"/);assert.match(html,/object-fit:contain/);
+});
+
+test('unedited photos use the same explicit framing as the editor preview',()=>{
+ const p={id:'unedited',name:'Peça sem ajuste',category:'c',image:'/assets/a.jpg'};
+ for(const context of ['catalog','gallery'])assert.equal(savedFrameStyle(p,p.image,context),frameStyle());
+ const html=renderProductPage(p,[]);
+ assert.match(html,/class="framed-image"/);
+ assert.match(html,/object-fit:contain;object-position:50% 50%;transform:scale\(1\)/);
 });

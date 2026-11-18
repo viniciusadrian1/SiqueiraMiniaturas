@@ -19,3 +19,6 @@ admin/vendor/
 /assets/motion-car.png
 /editorial.css
 /styles.css
+
+# Local garment production files and advertising mockups
+/Camisetas/
