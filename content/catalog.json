@@ -109,7 +109,30 @@
       "image": "/assets/uploads/screenshot_20261117_015346_instagram.jpg",
       "category": "miniaturas",
       "tag": "Edição Limitada",
-      "label": "MINIATURAS"
+      "label": "MINIATURAS",
+      "images": [
+        "/assets/uploads/screenshot_20261117_015346_instagram.jpg"
+      ],
+      "mercadoLivreUrl": "",
+      "driver": "",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/screenshot_20261117_015346_instagram.jpg": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.21,
+            "x": 50,
+            "y": 58.40159630329762
+          }
+        }
+      },
+      "availability": {
+        "status": "consult",
+        "mode": "unknown",
+        "note": ""
+      },
+      "isPrint": false
     }
   ]
 }
