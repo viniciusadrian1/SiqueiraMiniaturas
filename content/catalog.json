@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-fernando-alonso-the-eras-tour-cb4cc26d",
+      "image": "/assets/uploads/produto-8cfced88.png",
+      "images": [
+        "/assets/uploads/produto-8cfced88.png",
+        "/assets/uploads/produto-2c54c755.png",
+        "/assets/uploads/produto-f2bd5521.png",
+        "/assets/uploads/produto-ea66e3b9.png"
+      ],
+      "name": "Camiseta Fernando Alonso The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Fernando Alonso",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-8cfced88.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.68,
+            "x": 50,
+            "y": 47.2
+          }
+        },
+        "/assets/uploads/produto-2c54c755.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.26,
+            "x": 50,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-oscar-piastri-the-eras-tour-43f84527",
       "image": "/assets/uploads/produto-18a0019f.png",
       "images": [
