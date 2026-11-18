@@ -78,3 +78,12 @@ Essas ações impedem recuperação pela lixeira do painel. Não apagam históri
 ### Compra pelo Mercado Livre
 
 O editor do produto tem o campo opcional “Link do anúncio no Mercado Livre”. Cole o endereço HTTPS completo em mercadolivre.com.br (incluindo subdomínios de anúncios). Salvar publica o botão “Comprar no Mercado Livre” na página e no card da peça, mantendo o WhatsApp. Deixar vazio remove essa opção. O botão abre em nova aba; os valores, prazos e condições seguem o anúncio externo. Nenhum anúncio ou pagamento é criado pelo painel.
+
+
+### Busca, disponibilidade, relacionados e estampas
+
+O cadastro possui Piloto, Equipe e Escala opcionais. O catálogo busca nesses campos e também em nome, descrição e detalhes antigos, ignorando acentos e aceitando 1/43 ou 1:43. “Refinar busca” oferece seletores combináveis; os atalhos Todas, Pronta entrega e A caminho permitem acesso direto. Limpar filtros reinicia todos os seletores. Produtos sem disponibilidade cadastrada continuam sob consulta.
+
+As páginas sugerem até três produtos publicados, priorizando piloto, equipe, categoria e escala em comum. A lista pública é filtrada antes da seleção, excluindo produtos e categorias ocultos. Empates seguem a ordem manual do catálogo.
+
+Para cadastrar uma estampa, adicionar um produto com foto/arte, nome e categoria e marcar “Mostrar na galeria de estampas”. Publicar normalmente. A seção Estampas mostra somente os itens publicados e inclui contato de personalização pelo WhatsApp. Sem artes cadastradas, aparece um convite para conversar, sem imagens fictícias. O conteúdo continua no mesmo catálogo, com fotos, edição, ordenação e lixeira existentes.

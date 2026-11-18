@@ -16,7 +16,7 @@ http.createServer(async (req, res) => {
       const catalog=publicCatalog(JSON.parse(await readFile(path.join(root,'content/catalog.json'),'utf8')));
       const product=catalog.products.find(p=>p.id===productRoute[1]);
       if(!product){res.writeHead(404);return res.end('Produto não encontrado.');}
-      res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(renderProductPage(product,catalog.categories));
+      res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});return res.end(renderProductPage(product,catalog.categories,catalog.products));
     }
     const route = pathname === '/' ? '/index.html' : /^\/admin\/?$/.test(pathname) ? '/admin/index.html' : pathname;
     const target = path.resolve(root, '.' + route);

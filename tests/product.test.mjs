@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mercadoLivreURL,validateMercadoLivre,productImages,availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
+import {filterProducts,relatedProducts,mercadoLivreURL,validateMercadoLivre,productImages,availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
 import {renderProductPage} from '../lib/product-page.js';
 const product={id:'rb22-mc',name:'Miniatura especial',image:'/assets/uploads/real.jpg',category:'miniaturas',tag:'Edição Limitada',detail:'Detalhes da peça.\nSegunda linha.'};
 test('existing products never gain an invented ready-to-ship promise',()=>assert.equal(availabilityInfo(product).status,'consult'));
@@ -41,4 +41,17 @@ test('Mercado Livre links are optional and restricted to real HTTPS marketplace 
  assert.match(html,/Comprar no Mercado Livre/);assert.match(html,/variation=1&amp;quantity=1/);
  assert.ok(!renderProductPage(product,[]).includes('Comprar no Mercado Livre'));
  assert.ok(!renderProductPage({...product,mercadoLivreUrl:'javascript:alert(1)'},[]).includes('Comprar no Mercado Livre'));
+});
+
+test('catalog search combines pilot, team, scale and availability without changing order',()=>{
+ const products=[{...product,id:'a',driver:'Ayrton Senna',team:'McLaren',scale:'1:43',availability:{status:'ready'}},{...product,id:'b',detail:'Max Verstappen · Red Bull · Escala 1:43',availability:{status:'incoming'}}];
+ assert.deepEqual(filterProducts(products,{query:'senna 1/43',team:'McLaren',availability:'ready'}).map(p=>p.id),['a']);
+ assert.deepEqual(filterProducts(products,{query:'verstappen 1/43',availability:'incoming'}).map(p=>p.id),['b']);
+ assert.equal(filterProducts(products,{query:'senna',availability:'incoming'}).length,0);
+});
+test('related products exclude self and unpublished pieces, prioritizing shared pilot',()=>{
+ const p={...product,driver:'Senna'};
+ const others=[p,{...product,id:'same-category'},{...product,id:'same-pilot',driver:'Senna'},{...product,id:'hidden',published:false,driver:'Senna'}];
+ assert.deepEqual(relatedProducts(p,others).map(p=>p.id),['same-pilot','same-category']);
+ assert.match(renderProductPage(p,[],others),/Também podem te conquistar/);
 });

@@ -29,5 +29,5 @@ await rm(productRoot,{recursive:true,force:true});
 for(const product of publicCatalog(data).products){
  const directory=path.join(productRoot,product.id);
  await mkdir(directory,{recursive:true});
- await writeFile(path.join(directory,'index.html'),renderProductPage(product,publicCatalog(data).categories));
+ await writeFile(path.join(directory,'index.html'),renderProductPage(product,publicCatalog(data).categories,publicCatalog(data).products));
 }

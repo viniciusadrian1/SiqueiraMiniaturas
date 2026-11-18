@@ -1,4 +1,4 @@
-import { mercadoLivreURL,productURL,availabilityInfo,productMessage,displayPrice } from './product-data.js';
+import { filterProducts,mercadoLivreURL,productURL,availabilityInfo,productMessage,displayPrice } from './product-data.js';
 import { whatsappURL } from './catalog.js';
 import { escapeHTML as esc, imageURL, publicCatalog } from './catalog-data.js';
 let products = [];
@@ -22,7 +22,6 @@ let expanded = false;
 const search = document.querySelector('#search');
 const grid = document.querySelector('#products');
 const more = document.querySelector('#show-more');
-const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 function art(product, extraClass = '') {
   const label = esc(`${product.illustrative ? 'Imagem ilustrativa: ' : ''}${product.name}`);
   const src = imageURL(product.image);
@@ -31,8 +30,8 @@ function art(product, extraClass = '') {
     : `<img class="product-image ${extraClass}" src="${src}" alt="${label}" loading="lazy">`;
 }
 function render() {
-  const query = normalize(search.value.trim());
-  const matches = products.filter(p => (category === 'all' || p.category === category) && normalize(`${p.name} ${p.category} ${p.subtitle || ""}`).includes(query));
+  document.querySelectorAll('[data-availability]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.availability===document.querySelector('#filter-availability').value)));
+  const matches=filterProducts(products,{query:search.value,category,availability:document.querySelector('#filter-availability').value,driver:document.querySelector('#filter-driver').value,team:document.querySelector('#filter-team').value,scale:document.querySelector('#filter-scale').value});
   const shown = expanded ? matches : matches.slice(0, 4);
   grid.innerHTML = shown.map(p => `<article class="product-card"><a class="product-art" href="${productURL(p)}" aria-label="Ver detalhes de ${esc(p.name)}">${art(p)}${p.tag ? `<span class="product-tag">${esc(p.tag)}</span>` : ''}<span class="product-open" aria-hidden="true">Ver detalhes</span><span class="product-swatch" style="--swatch:#ec3b30" aria-hidden="true"></span></a><div class="product-label"><span>${esc(p.label)}</span><span>Nº ${String(products.indexOf(p) + 1).padStart(2, '0')}</span></div><a class="product-name" href="${productURL(p)}">${esc(p.name)}</a><p>${esc(p.subtitle)}</p>${p.price ? `<p class="product-price">${esc(displayPrice(p.price))}</p>` : ''}<p class="product-availability">${esc(availabilityInfo(p).title)}</p><div class="product-foot"><a href="${whatsappURL(productMessage(p))}" target="_blank" rel="noopener noreferrer" aria-label="Consultar ${esc(p.name)} pelo WhatsApp">${esc(availabilityInfo(p).action)}</a>${mercadoLivreURL(p.mercadoLivreUrl)?`<a class="catalog-marketplace" href="${esc(mercadoLivreURL(p.mercadoLivreUrl))}" target="_blank" rel="noopener noreferrer">Comprar no Mercado Livre</a>`:''}</div></article>`).join('');
   document.querySelector('#results-count').textContent = `${String(shown.length).padStart(2, '0')} de ${String(matches.length).padStart(2, '0')} peças`;
@@ -42,6 +41,7 @@ function render() {
   document.querySelector('#reset-search').hidden = !products.length;
   document.querySelector('.catalog-toolbar').hidden = !products.length;
   document.querySelector('.catalog-meta').hidden = !products.length;
+  document.querySelector('.catalog-refine').hidden=!products.length;document.querySelector('.availability-tabs').hidden=!products.length;
   more.hidden = matches.length <= 4;
   more.textContent = expanded ? 'Mostrar menos' : 'Ver mais peças';
 }
@@ -52,9 +52,11 @@ document.querySelector('.filters').addEventListener('click', event => {
   document.querySelectorAll('.filter').forEach(el => { const selected = el === button; el.classList.toggle('active', selected); el.setAttribute('aria-pressed', String(selected)); });
   render();
 });
+document.querySelector('.availability-tabs').addEventListener('click',event=>{const button=event.target.closest('[data-availability]');if(!button)return;document.querySelector('#filter-availability').value=button.dataset.availability;expanded=false;render();});
+document.querySelectorAll('.refine-fields select').forEach(select=>select.addEventListener('change',()=>{expanded=false;render();}));
 search.addEventListener('input', () => { expanded = false; render(); });
 more.addEventListener('click', () => { expanded = !expanded; render(); });
-document.querySelector('#reset-search').addEventListener('click', () => { search.value = ''; document.querySelector('[data-category="all"]').click(); search.focus(); });
+document.querySelector('#reset-search').addEventListener('click', () => { search.value = ''; document.querySelectorAll('.refine-fields select').forEach(s=>s.selectedIndex=0); document.querySelector('[data-category="all"]').click(); search.focus(); });
 async function loadCatalog() {
   grid.setAttribute('aria-busy', 'true');
   more.hidden = true;
@@ -64,6 +66,14 @@ async function loadCatalog() {
     ({products, categories} = publicCatalog(await response.json()));
     document.querySelector('.filters').innerHTML = [{id:'all',name:'Todas as peças'}, ...categories].map(c => `<button class="filter ${c.id === 'all' ? 'active' : ''}" data-category="${esc(c.id)}" aria-pressed="${c.id === 'all'}">${esc(c.name)}</button>`).join('');
     document.querySelector('.catalog-meta p').textContent = products.some(p => p.illustrative) ? 'Inclui imagens ilustrativas. Valores e disponibilidade pelo WhatsApp.' : 'Valores e disponibilidade pelo WhatsApp.';
+    for(const key of ['driver','team','scale']){
+      const labels={driver:'Todos os pilotos',team:'Todas as equipes',scale:'Todas as escalas'};
+      const values=[...new Set(products.map(p=>p[key]?.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true}));
+      document.querySelector('#filter-'+key).innerHTML=`<option value="">${labels[key]}</option>`+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    }
+    const prints=products.filter(p=>p.isPrint===true);
+    document.querySelector('#print-gallery').innerHTML=prints.map(p=>`<article class="print-card"><a href="${productURL(p)}"><img src="${imageURL(p.image)}" alt="${esc(p.name)}" loading="lazy"><h3>${esc(p.name)}</h3></a>${p.subtitle?`<p>${esc(p.subtitle)}</p>`:''}<a class="print-inquiry" href="${whatsappURL(`Olá! Gostei da estampa ${p.name} no site da Siqueira. Quero conversar sobre uma personalização com essa ideia. https://siqueiraminiaturas.vercel.app${productURL(p)}`)}" target="_blank" rel="noopener noreferrer">Quero personalizar com esta estampa</a></article>`).join('');
+    document.querySelector('#prints-empty').hidden=prints.length>0;
     category = 'all';
     render();
   } catch {

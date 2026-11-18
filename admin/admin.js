@@ -67,7 +67,8 @@ function openProduct(id){
  editing=data.products.find(p=>p.id===id)||null;photo=null;photos=editing?productImages(editing).map(path=>({path})):[];dirty=false;form.reset();
  $('#notice').hidden=true;$('#editor-title').innerHTML=editing?'Editar produto<span>.</span>':'Novo produto<span>.</span>';
  form.elements.category.innerHTML='<option value="">Escolha uma categoria</option>'+data.categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.visible===false?' (oculta)':''}</option>`).join('');
- for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl'])form.elements[key].value=editing?.[key]||'';
+ for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl','driver','team','scale'])form.elements[key].value=editing?.[key]||'';
+ form.elements.isPrint.checked=editing?.isPrint===true;
  form.elements.published.checked=editing?editing.published!==false:true;form.elements.illustrative.checked=editing?.illustrative===true;
  renderPhotos();
  form.elements.availabilityStatus.value=editing?.availability?.status||'consult';
@@ -146,11 +147,12 @@ form.addEventListener('submit',async event=>{
  event.preventDefault();if(busy||photoLoading)return;
  if(!photos.length){notice('Escolha uma foto para o produto.',true);$('#photo').focus();return;}
  const fields=new FormData(form),product={...editing,id:editing?.id||newId(fields.get('name')),image:photos[0].path.startsWith('/')?photos[0].path:'/'+photos[0].path,images:photos.map(p=>p.path.startsWith('/')?p.path:'/'+p.path)};
- for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl'])product[key]=String(fields.get(key)||'').trim();
+ for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl','driver','team','scale'])product[key]=String(fields.get(key)||'').trim();
  product.availability={status:form.elements.availabilityStatus.value,mode:form.elements.availabilityMode.value,note:form.elements.availabilityNote.value.trim()};
  if(product.availability.mode==='days')product.availability.days=Number(form.elements.availabilityDays.value);
  if(product.availability.mode==='date')product.availability.date=form.elements.availabilityDate.value;
  try{validateAvailability(product.availability);validateMercadoLivre(product.mercadoLivreUrl);}catch(error){notice(error.message,true);return;}
+ product.isPrint=form.elements.isPrint.checked;
  product.published=form.elements.published.checked;product.illustrative=form.elements.illustrative.checked;
  product.label=data.categories.find(c=>c.id===product.category)?.name.toLocaleUpperCase('pt-BR')||'';
  if(photos.some(p=>p.base64))delete product.imagePosition;
