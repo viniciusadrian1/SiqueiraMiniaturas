@@ -1,3 +1,5 @@
+import {createFrameEditor} from './frame-editor.js';
+import {frameKey,frameStyle,savedFrameStyle} from '../image-frame.js';
 import {photoSort} from './photo-sort.js';
 import {productImages} from '../product-data.js';
 import {validateMercadoLivre,validateAvailability,availabilityInfo} from '../product-data.js';
@@ -7,6 +9,7 @@ const $=selector=>document.querySelector(selector),form=$('#product-form');
 const preview=['localhost','127.0.0.1'].includes(location.hostname)&&new URLSearchParams(location.search).has('preview');
 let store,data={categories:[],products:[]},view='products',editing=null,editingCategory=null,photo=null,photos=[],dirty=false,busy=false,photoLoading=false,popup=null,poll=0,pendingDelete=null;
 const localPhotos=new Map();
+const frameEditor=createFrameEditor({canEdit:()=>!busy&&!photoLoading,onApply:(photo,frames)=>{photo.frames=frames;dirty=true;renderPhotos();$('#save-hint').textContent='Enquadramento ajustado. Salve o produto para publicar.';}});
 const price=value=>value?(String(value).startsWith('R$')?value:`R$ ${value}`):'Preço sob consulta';
 function notice(message,error=false){$('#notice').hidden=false;$('#notice').textContent=message;$('#notice').classList.toggle('error',error);}
 function image(path){return localPhotos.get(path)||('/'+imageURL(path).replace(/^\//,''));}
@@ -37,7 +40,7 @@ function render(){
  if(!products)$('#product-order-hint').textContent=query.trim()?'Limpe a busca para organizar as categorias.':'Arraste as categorias pela alça para definir a ordem dos filtros do site. A ordem é salva automaticamente.';
  const visible=p=>p.published!==false&&data.categories.find(c=>c.id===p.category)?.visible!==false;
  const list=data[view].filter(p=>p.name.toLocaleLowerCase('pt-BR').includes(query)&&(!products||filter==='all'||visible(p)===(filter==='visible')));
- $('#items').innerHTML=list.map(p=>products?`<article class="product" data-product-index="${data.products.indexOf(p)}"><button type="button" class="product-drag-handle" data-sort-product aria-label="Mover produto ${esc(p.name)}. Arraste ou use as setas do teclado." aria-pressed="false" ${sortable?'':'disabled'}>⠿ <span>Arrastar produto</span></button><img class="product-image" src="${esc(image(p.image))}" alt="${esc(p.name)}"><div class="product-body"><div class="product-meta"><span>${esc(data.categories.find(c=>c.id===p.category)?.name)}</span><span class="badge ${visible(p)?'':'off'}">${visible(p)?'No mostruário':'Oculto'}</span></div>${p.tag?`<span class="card-tag">${esc(p.tag)}</span>`:''}<h2>${esc(p.name)}</h2><p class="card-arrival">${esc(availabilityInfo(p).title)}</p><p class="price">${esc(price(p.price))}</p><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar produto</button><button class="quiet" data-toggle="${esc(p.id)}">${p.published===false?'Mostrar':'Ocultar'}</button><button class="danger-quiet" data-delete="${esc(p.id)}" aria-label="Excluir produto ${esc(p.name)}">Excluir</button></div></div></article>`:`<article class="category-card" data-category-index="${data.categories.indexOf(p)}"><button type="button" class="category-drag-handle" data-sort-category aria-label="Mover categoria ${esc(p.name)}. Arraste ou use as setas do teclado." aria-pressed="false" ${!query.trim()&&data.categories.length>1?'':'disabled'}>⠿ <span>Arrastar</span></button><div class="category-info"><h2>${esc(p.name)}</h2><p>${data.products.filter(x=>x.category===p.id).length} produto(s) · ${p.visible===false?'Oculta':'Visível no site'}</p></div><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar</button><button class="danger-quiet" data-delete="${esc(p.id)}" aria-label="Excluir categoria ${esc(p.name)}">Excluir</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Adicione um novo item ou ajuste sua busca.</p></div>';
+ $('#items').innerHTML=list.map(p=>products?`<article class="product" data-product-index="${data.products.indexOf(p)}"><button type="button" class="product-drag-handle" data-sort-product aria-label="Mover produto ${esc(p.name)}. Arraste ou use as setas do teclado." aria-pressed="false" ${sortable?'':'disabled'}>⠿ <span>Arrastar produto</span></button><div class="admin-product-image"><img class="product-image" style="${savedFrameStyle(p,p.image,'catalog')}" src="${esc(image(p.image))}" alt="${esc(p.name)}"></div><div class="product-body"><div class="product-meta"><span>${esc(data.categories.find(c=>c.id===p.category)?.name)}</span><span class="badge ${visible(p)?'':'off'}">${visible(p)?'No mostruário':'Oculto'}</span></div>${p.tag?`<span class="card-tag">${esc(p.tag)}</span>`:''}<h2>${esc(p.name)}</h2><p class="card-arrival">${esc(availabilityInfo(p).title)}</p><p class="price">${esc(price(p.price))}</p><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar produto</button><button class="quiet" data-toggle="${esc(p.id)}">${p.published===false?'Mostrar':'Ocultar'}</button><button class="danger-quiet" data-delete="${esc(p.id)}" aria-label="Excluir produto ${esc(p.name)}">Excluir</button></div></div></article>`:`<article class="category-card" data-category-index="${data.categories.indexOf(p)}"><button type="button" class="category-drag-handle" data-sort-category aria-label="Mover categoria ${esc(p.name)}. Arraste ou use as setas do teclado." aria-pressed="false" ${!query.trim()&&data.categories.length>1?'':'disabled'}>⠿ <span>Arrastar</span></button><div class="category-info"><h2>${esc(p.name)}</h2><p>${data.products.filter(x=>x.category===p.id).length} produto(s) · ${p.visible===false?'Oculta':'Visível no site'}</p></div><div class="card-actions"><button class="secondary" data-edit="${esc(p.id)}">Editar</button><button class="danger-quiet" data-delete="${esc(p.id)}" aria-label="Excluir categoria ${esc(p.name)}">Excluir</button></div></article>`).join('')||'<div class="empty-state"><h2>Nenhum item por aqui.</h2><p>Adicione um novo item ou ajuste sua busca.</p></div>';
 }
 photoSort($('#items'),{
  handleSelector:'[data-sort-product]',cardSelector:'[data-product-index]',indexAttribute:'data-product-index',
@@ -64,7 +67,7 @@ photoSort($('#items'),{
 function leave(){if(busy||photoLoading)return false;return !dirty||confirm('Você tem alterações não salvas. Deseja descartá-las?');}
 function list(){dirty=false;photo=null;$('#editor').hidden=true;$('#listing').hidden=false;render();window.scrollTo({top:0,behavior:'instant'});}
 function openProduct(id){
- editing=data.products.find(p=>p.id===id)||null;photo=null;photos=editing?productImages(editing).map(path=>({path})):[];dirty=false;form.reset();
+ editing=data.products.find(p=>p.id===id)||null;photo=null;photos=editing?productImages(editing).map(path=>({path,frames:structuredClone(editing.imageFrames?.[frameKey(path)]||{})})):[];dirty=false;form.reset();
  $('#notice').hidden=true;$('#editor-title').innerHTML=editing?'Editar produto<span>.</span>':'Novo produto<span>.</span>';
  form.elements.category.innerHTML='<option value="">Escolha uma categoria</option>'+data.categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}${c.visible===false?' (oculta)':''}</option>`).join('');
  for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl','driver','team','scale'])form.elements[key].value=editing?.[key]||'';
@@ -108,9 +111,9 @@ function monitorPublication(){
 }
 form.addEventListener('input',()=>{dirty=true;updatePreview();$('#save-hint').textContent='Você tem alterações para salvar.';});
 function renderPhotos(){
- $('#photo-preview').hidden=!photos.length;$('#photo-placeholder').hidden=!!photos.length;
- if(photos.length)$('#photo-preview').src=photos[0].url||image(photos[0].path);
- $('#photo-list').innerHTML=photos.map((p,i)=>`<div class="photo-item" data-photo-index="${i}"><button type="button" class="photo-drag-handle" data-sort-photo aria-label="Mover foto ${i+1}. Arraste ou use as setas do teclado." aria-pressed="false">⠿ <span>Arrastar</span></button><img src="${esc(p.url||image(p.path))}" alt="Foto ${i+1}"><span>${i===0?'Capa':'Foto '+(i+1)}</span><button type="button" data-cover="${i}" ${i===0?'disabled':''}>Usar como capa</button><button type="button" data-remove="${i}" aria-label="Remover foto ${i+1}">Remover</button></div>`).join('');
+ $('#photo-preview-frame').hidden=!photos.length;$('#photo-preview').hidden=!photos.length;$('#photo-placeholder').hidden=!!photos.length;
+ if(photos.length){$('#photo-preview').src=photos[0].url||image(photos[0].path);$('#photo-preview').style.cssText=photos[0].frames?.catalog?frameStyle(photos[0].frames.catalog):'';}
+ $('#photo-list').innerHTML=photos.map((p,i)=>`<div class="photo-item" data-photo-index="${i}"><button type="button" class="photo-drag-handle" data-sort-photo aria-label="Mover foto ${i+1}. Arraste ou use as setas do teclado." aria-pressed="false">⠿ <span>Arrastar</span></button><img src="${esc(p.url||image(p.path))}" alt="Foto ${i+1}"><span>${i===0?'Capa':'Foto '+(i+1)}</span><button type="button" data-frame="${i}">Enquadrar foto</button><button type="button" data-cover="${i}" ${i===0?'disabled':''}>Usar como capa</button><button type="button" data-remove="${i}" aria-label="Remover foto ${i+1}">Remover</button></div>`).join('');
 }
 photoSort($('#photo-list'),{canMove:()=>!busy&&!photoLoading,onMove:(from,to)=>{
  const [item]=photos.splice(from,1);photos.splice(to,0,item);dirty=true;renderPhotos();
@@ -120,6 +123,7 @@ photoSort($('#photo-list'),{canMove:()=>!busy&&!photoLoading,onMove:(from,to)=>{
 }});
 $('#photo-list').addEventListener('click',e=>{
  if(busy||photoLoading)return;
+ const framing=e.target.closest('[data-frame]');if(framing){frameEditor.show(photos[Number(framing.dataset.frame)],Number(framing.dataset.frame));return;}
  const cover=e.target.closest('[data-cover]'),remove=e.target.closest('[data-remove]');
  if(cover){const [item]=photos.splice(Number(cover.dataset.cover),1);photos.unshift(item);}
  else if(remove){const [item]=photos.splice(Number(remove.dataset.remove),1);if(item.url)URL.revokeObjectURL(item.url);}
@@ -148,6 +152,7 @@ form.addEventListener('submit',async event=>{
  if(!photos.length){notice('Escolha uma foto para o produto.',true);$('#photo').focus();return;}
  const fields=new FormData(form),product={...editing,id:editing?.id||newId(fields.get('name')),image:photos[0].path.startsWith('/')?photos[0].path:'/'+photos[0].path,images:photos.map(p=>p.path.startsWith('/')?p.path:'/'+p.path)};
  for(const key of ['name','price','subtitle','detail','tag','category','mercadoLivreUrl','driver','team','scale'])product[key]=String(fields.get(key)||'').trim();
+ product.imageFrames=Object.fromEntries(photos.filter(p=>Object.keys(p.frames||{}).length).map(p=>[frameKey(p.path),p.frames]));
  product.availability={status:form.elements.availabilityStatus.value,mode:form.elements.availabilityMode.value,note:form.elements.availabilityNote.value.trim()};
  if(product.availability.mode==='days')product.availability.days=Number(form.elements.availabilityDays.value);
  if(product.availability.mode==='date')product.availability.date=form.elements.availabilityDate.value;

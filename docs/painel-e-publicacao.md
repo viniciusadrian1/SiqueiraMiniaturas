@@ -87,3 +87,12 @@ O cadastro possui Piloto, Equipe e Escala opcionais. O catálogo busca nesses ca
 As páginas sugerem até três produtos publicados, priorizando piloto, equipe, categoria e escala em comum. A lista pública é filtrada antes da seleção, excluindo produtos e categorias ocultos. Empates seguem a ordem manual do catálogo.
 
 Para cadastrar uma estampa, adicionar um produto com foto/arte, nome e categoria e marcar “Mostrar na galeria de estampas”. Publicar normalmente. A seção Estampas mostra somente os itens publicados e inclui contato de personalização pelo WhatsApp. Sem artes cadastradas, aparece um convite para conversar, sem imagens fictícias. O conteúdo continua no mesmo catálogo, com fotos, edição, ordenação e lixeira existentes.
+
+
+### Enquadramento das fotos
+
+Cada foto possui “Enquadrar foto”. O diálogo mostra os espaços reais: capa no catálogo em 4:3 e galeria da peça em 1:1. Selecionar “Preencher o espaço” ou “Mostrar a foto inteira”, usar zoom de 100% a 300% e arrastar a imagem. Controles horizontais e verticais também permitem posicionar pelo teclado. Cancelar não altera o cadastro; Aplicar guarda o ajuste no formulário e Salvar produto publica.
+
+As opções ficam em `imageFrames`, associadas ao caminho original de cada foto, separadas por `catalog` e `gallery`. Reordenar fotos mantém o enquadramento de cada uma. A primeira é usada como capa. Original e upload ficam intactos; o visualizador ampliado abre a imagem completa. Ajustes são renderizados por `image-frame.js`, com valores limitados, tanto na prévia quanto no site. Fotos antigas sem ajustes usam o enquadramento anterior. Cartões do catálogo têm proporção 4:3 também no celular.
+
+Verificação: testes de geometria de arraste, limites dos ajustes, renderização por contexto e preservação do vínculo com cada foto. A revisão visual desta alteração foi interrompida pela ferramenta de controle do navegador por falha na verificação da URL; não foi concluída.

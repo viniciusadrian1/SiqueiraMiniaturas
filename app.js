@@ -1,3 +1,4 @@
+import {savedFrameStyle} from './image-frame.js';
 import { filterProducts,mercadoLivreURL,productURL,availabilityInfo,productMessage,displayPrice } from './product-data.js';
 import { whatsappURL } from './catalog.js';
 import { escapeHTML as esc, imageURL, publicCatalog } from './catalog-data.js';
@@ -27,7 +28,7 @@ function art(product, extraClass = '') {
   const src = imageURL(product.image);
   return /^(0|100)% (0|100)%$/.test(product.imagePosition || '')
     ? `<div class="product-image sheet ${extraClass}" role="img" aria-label="${label}" style="background-image:url('${src}');background-position:${product.imagePosition}"></div>`
-    : `<img class="product-image ${extraClass}" src="${src}" alt="${label}" loading="lazy">`;
+    : `<img class="product-image ${extraClass}" style="${savedFrameStyle(product,product.image,'catalog')}" src="${src}" alt="${label}" loading="lazy">`;
 }
 function render() {
   document.querySelectorAll('[data-availability]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.availability===document.querySelector('#filter-availability').value)));
@@ -72,7 +73,7 @@ async function loadCatalog() {
       document.querySelector('#filter-'+key).innerHTML=`<option value="">${labels[key]}</option>`+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
     }
     const prints=products.filter(p=>p.isPrint===true);
-    document.querySelector('#print-gallery').innerHTML=prints.map(p=>`<article class="print-card"><a href="${productURL(p)}"><img src="${imageURL(p.image)}" alt="${esc(p.name)}" loading="lazy"><h3>${esc(p.name)}</h3></a>${p.subtitle?`<p>${esc(p.subtitle)}</p>`:''}<a class="print-inquiry" href="${whatsappURL(`Olá! Gostei da estampa ${p.name} no site da Siqueira. Quero conversar sobre uma personalização com essa ideia. https://siqueiraminiaturas.vercel.app${productURL(p)}`)}" target="_blank" rel="noopener noreferrer">Quero personalizar com esta estampa</a></article>`).join('');
+    document.querySelector('#print-gallery').innerHTML=prints.map(p=>`<article class="print-card"><a href="${productURL(p)}"><span class="print-image"><img style="${savedFrameStyle(p,p.image,'gallery')}" src="${imageURL(p.image)}" alt="${esc(p.name)}" loading="lazy"></span><h3>${esc(p.name)}</h3></a>${p.subtitle?`<p>${esc(p.subtitle)}</p>`:''}<a class="print-inquiry" href="${whatsappURL(`Olá! Gostei da estampa ${p.name} no site da Siqueira. Quero conversar sobre uma personalização com essa ideia. https://siqueiraminiaturas.vercel.app${productURL(p)}`)}" target="_blank" rel="noopener noreferrer">Quero personalizar com esta estampa</a></article>`).join('');
     document.querySelector('#prints-empty').hidden=prints.length>0;
     category = 'all';
     render();
