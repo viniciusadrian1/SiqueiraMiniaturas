@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-franco-colapinto-the-eras-tour-a1f1ddee",
+      "image": "/assets/uploads/produto-568f2ebf.png",
+      "images": [
+        "/assets/uploads/produto-568f2ebf.png",
+        "/assets/uploads/produto-f454b3d9.png",
+        "/assets/uploads/produto-8fb64351.png",
+        "/assets/uploads/produto-60a2b83b.png"
+      ],
+      "name": "Camiseta Franco Colapinto The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Franco Colapinto",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-568f2ebf.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.71,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-f454b3d9.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.29,
+            "x": 46.6,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 2
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-george-russell-the-eras-tour-9fae8bda",
       "image": "/assets/uploads/produto-1755a0cb.png",
       "images": [
