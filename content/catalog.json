@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-charles-leclerc-the-eras-tour-ccf35a3c",
+      "image": "/assets/uploads/produto-132699f9.png",
+      "images": [
+        "/assets/uploads/produto-132699f9.png",
+        "/assets/uploads/produto-caaf2e96.png",
+        "/assets/uploads/produto-069bfb29.png",
+        "/assets/uploads/produto-6c38f1f5.png"
+      ],
+      "name": "Camiseta Charles Leclerc The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Charles Leclerc",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-132699f9.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.67,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-caaf2e96.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.3,
+            "x": 47.9,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-franco-colapinto-the-eras-tour-a1f1ddee",
       "image": "/assets/uploads/produto-568f2ebf.png",
       "images": [
