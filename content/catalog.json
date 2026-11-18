@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-george-russell-the-eras-tour-9fae8bda",
+      "image": "/assets/uploads/produto-1755a0cb.png",
+      "images": [
+        "/assets/uploads/produto-1755a0cb.png",
+        "/assets/uploads/produto-d97b1c3f.png",
+        "/assets/uploads/produto-9b05dcb8.png",
+        "/assets/uploads/produto-c4a1cb73.png"
+      ],
+      "name": "Camiseta George Russell The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "George Russell",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-1755a0cb.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.68,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-d97b1c3f.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.25,
+            "x": 57.7,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-lando-norris-the-eras-tour-b61f78d5",
       "image": "/assets/uploads/produto-8901895f.png",
       "images": [
