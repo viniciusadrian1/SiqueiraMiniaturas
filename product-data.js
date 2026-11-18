@@ -26,3 +26,13 @@ export function productMessage(product){const a=availabilityInfo(product);return
 export function displayPrice(value){return value?(String(value).trim().startsWith('R$')?String(value).trim():`R$ ${String(value).trim()}`):'Valor sob consulta';}
 
 export function productImages(product){return [...new Set([product.image,...(Array.isArray(product.images)?product.images:[])].filter(value=>typeof value==='string'&&value))];}
+
+export function mercadoLivreURL(value){
+ if(typeof value!=='string'||!value.trim())return '';
+ try{
+  const url=new URL(value.trim());
+  if(url.protocol!=='https:'||url.username||url.password||url.port||!(url.hostname==='mercadolivre.com.br'||url.hostname.endsWith('.mercadolivre.com.br')))return '';
+  return url.href;
+ }catch{return '';}
+}
+export function validateMercadoLivre(value){if(value!==undefined&&value!==null&&value!==''&&(typeof value!=='string'||(value.trim()&&!mercadoLivreURL(value))))throw new Error('Use o link HTTPS completo do anúncio em mercadolivre.com.br.');}

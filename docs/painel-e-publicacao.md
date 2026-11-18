@@ -73,3 +73,8 @@ O catálogo público e as páginas não incluem o conteúdo da lixeira. O reposi
 Na lixeira, “Excluir definitivamente” remove o cadastro selecionado após confirmação com seu nome. “Esvaziar lixeira” remove todos os itens, mesmo com busca ativa, após confirmação mostrando a quantidade total. Cancelar fica focado inicialmente. Categorias necessárias para restaurar produtos ainda na lixeira não podem ser apagadas individualmente; restaurar a categoria ou apagar esses produtos primeiro. Esvaziar remove todos juntos. Produtos e categorias ativos permanecem intactos. A gravação mantém proteção contra conflitos e preserva os itens em caso de falha.
 
 Essas ações impedem recuperação pela lixeira do painel. Não apagam histórico Git nem arquivos de fotos, que podem ser compartilhados com outros cadastros.
+
+
+### Compra pelo Mercado Livre
+
+O editor do produto tem o campo opcional “Link do anúncio no Mercado Livre”. Cole o endereço HTTPS completo em mercadolivre.com.br (incluindo subdomínios de anúncios). Salvar publica o botão “Comprar no Mercado Livre” na página e no card da peça, mantendo o WhatsApp. Deixar vazio remove essa opção. O botão abre em nova aba; os valores, prazos e condições seguem o anúncio externo. Nenhum anúncio ou pagamento é criado pelo painel.

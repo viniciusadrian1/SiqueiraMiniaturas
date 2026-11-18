@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {productImages,availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
+import {mercadoLivreURL,validateMercadoLivre,productImages,availabilityInfo,validateAvailability,productURL,productMessage} from '../product-data.js';
 import {renderProductPage} from '../lib/product-page.js';
 const product={id:'rb22-mc',name:'Miniatura especial',image:'/assets/uploads/real.jpg',category:'miniaturas',tag:'Edição Limitada',detail:'Detalhes da peça.\nSegunda linha.'};
 test('existing products never gain an invented ready-to-ship promise',()=>assert.equal(availabilityInfo(product).status,'consult'));
@@ -29,4 +29,16 @@ test('gallery preserves legacy cover and renders all additional photos with navi
  assert.equal((html.match(/class="gallery-slide"/g)||[]).length,3);
  assert.match(html,/data-gallery-next/);assert.match(html,/foto 3 de 3/);
  assert.deepEqual(productImages({...p,images:[product.image,product.image]}),[product.image]);
+});
+
+test('Mercado Livre links are optional and restricted to real HTTPS marketplace hosts',()=>{
+ const url='https://produto.mercadolivre.com.br/MLB-123-peca?variation=1&quantity=1';
+ assert.equal(mercadoLivreURL(url),url);assert.doesNotThrow(()=>validateMercadoLivre(''));
+ for(const unsafe of ['javascript:alert(1)','https://mercadolivre.com.br.evil.example/item','https://mercadolivre.com.br@evil.example/item','http://produto.mercadolivre.com.br/item','https://user:pass@mercadolivre.com.br/item','https://mercadolivre.com.br:8443/item']){
+  assert.equal(mercadoLivreURL(unsafe),'');assert.throws(()=>validateMercadoLivre(unsafe),/link HTTPS/);
+ }
+ const html=renderProductPage({...product,mercadoLivreUrl:url},[]);
+ assert.match(html,/Comprar no Mercado Livre/);assert.match(html,/variation=1&amp;quantity=1/);
+ assert.ok(!renderProductPage(product,[]).includes('Comprar no Mercado Livre'));
+ assert.ok(!renderProductPage({...product,mercadoLivreUrl:'javascript:alert(1)'},[]).includes('Comprar no Mercado Livre'));
 });

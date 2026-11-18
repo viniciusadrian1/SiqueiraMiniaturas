@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {rm} from 'node:fs/promises';
 import {renderProductPage} from '../lib/product-page.js';
-import {validateAvailability} from '../product-data.js';
+import {validateAvailability,validateMercadoLivre} from '../product-data.js';
 import {mkdir,cp,readFile,writeFile} from 'node:fs/promises';
 import {publicCatalog} from '../catalog-data.js';
 const data=JSON.parse(await readFile('content/catalog.json','utf8'));
@@ -10,7 +10,7 @@ for(const list of [data.products,data.categories]) {
  const ids=new Set();
  for(const item of list){if(!/^[a-z0-9-]+$/.test(item.id)||ids.has(item.id)||!item.name)throw new Error('Código duplicado ou nome inválido no catálogo.');ids.add(item.id);}
 }
-for(const p of data.products)validateAvailability(p.availability);
+for(const p of data.products){validateAvailability(p.availability);validateMercadoLivre(p.mercadoLivreUrl);}
 const categories=new Set(data.categories.map(c=>c.id));
 for(const p of data.products)if(!categories.has(p.category))throw new Error(`Categoria inexistente: ${p.name}. Reassocie as peças antes de remover uma categoria.`);
 await mkdir('dist',{recursive:true});
