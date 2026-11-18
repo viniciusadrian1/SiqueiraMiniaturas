@@ -18,6 +18,36 @@
   ],
   "products": [
     {
+      "id": "camiseta-max-verstappen-the-eras-tour-ae90c4d8",
+      "image": "/assets/uploads/produto-0600aa34.png",
+      "images": [
+        "/assets/uploads/produto-0600aa34.png",
+        "/assets/uploads/produto-3e10b50c.png",
+        "/assets/uploads/produto-b53ad2b5.png",
+        "/assets/uploads/produto-450d01f0.png"
+      ],
+      "name": "Camiseta Max Verstappen The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Max Verstappen",
+      "team": "",
+      "scale": "",
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": true,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "miniatura-rb22-max-verstappen-bburago-ee5bf4b3",
       "image": "/assets/uploads/produto-1002a8f8.png",
       "images": [
