@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-carlos-sainz-the-eras-tour-8167eef1",
+      "image": "/assets/uploads/produto-d749b270.png",
+      "images": [
+        "/assets/uploads/produto-d749b270.png",
+        "/assets/uploads/produto-a46a620c.png",
+        "/assets/uploads/produto-aaeda22e.png",
+        "/assets/uploads/produto-37194091.png"
+      ],
+      "name": "Camiseta Carlos Sainz The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Carlos Sainz",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-d749b270.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.66,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-a46a620c.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.24,
+            "x": 56.9,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-fernando-alonso-the-eras-tour-cb4cc26d",
       "image": "/assets/uploads/produto-8cfced88.png",
       "images": [
