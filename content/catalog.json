@@ -18,6 +18,54 @@
   ],
   "products": [
     {
+      "id": "camiseta-oscar-piastri-the-eras-tour-43f84527",
+      "image": "/assets/uploads/produto-18a0019f.png",
+      "images": [
+        "/assets/uploads/produto-18a0019f.png",
+        "/assets/uploads/produto-a410bd08.png",
+        "/assets/uploads/produto-62913951.png",
+        "/assets/uploads/produto-2eb0be8d.png"
+      ],
+      "name": "Camiseta Oscar Piastri The Eras Tour",
+      "price": "79,90",
+      "subtitle": "",
+      "detail": "",
+      "tag": "Novidade",
+      "category": "roupas",
+      "mercadoLivreUrl": "",
+      "driver": "Oscar Piastri",
+      "team": "",
+      "scale": "",
+      "imageFrames": {
+        "/assets/uploads/produto-18a0019f.png": {
+          "catalog": {
+            "fit": "contain",
+            "zoom": 1.68,
+            "x": 50,
+            "y": 50
+          }
+        },
+        "/assets/uploads/produto-a410bd08.png": {
+          "gallery": {
+            "fit": "contain",
+            "zoom": 1.28,
+            "x": 47.9,
+            "y": 0
+          }
+        }
+      },
+      "availability": {
+        "status": "order",
+        "mode": "days",
+        "note": "",
+        "days": 7
+      },
+      "isPrint": false,
+      "published": true,
+      "illustrative": false,
+      "label": "ROUPAS"
+    },
+    {
       "id": "camiseta-kimi-antonelli-the-eras-tour-34b12e2b",
       "image": "/assets/uploads/produto-e6145e72.png",
       "images": [
